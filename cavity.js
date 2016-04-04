@@ -103,8 +103,8 @@ function update()
     var lambda0 = parseFloat($('cav_lambda0').value) * 1e-9;
     
     log_result('FSR', cav.FSR.toExponential(3), 'Hz');
-    log_result('Finesse', cav.F.toExponential(3), '');
-    log_result('Power build-up', cav.buildup.toExponential(3), '');
+    log_result('Finesse', cav.F.toFixed(1), '');
+    log_result('Power build-up', cav.buildup.toFixed(1), '');
     log_result('Reflected power', (cav.R * 100).toFixed(3), '%');
     log_result('Transmitted power', (cav.T * 100).toFixed(3), '%');
     var is_stable = cav.is_stable();
