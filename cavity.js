@@ -121,7 +121,7 @@ function log_result(desc, value, unit)
 {
     out = get_result_window();
     out.innerHTML += '<span class="desc">'+desc+':</span> '
-        + '<span class="value">' + value + '</span> <span class="unit">'
+        + '<span class="value">' + value + '</span><span class="unit">'
         + unit + '</span><br />';
 }
 
