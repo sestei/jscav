@@ -85,6 +85,44 @@ class Cavity {
 
         return Math.pow(sqr(lambda0/Math.PI)*N/D, 0.25);
     }
+
+    // THIS NEW WAY OF CALCULATING THE BEAM SIZES FAILS FOR
+    // e.g. L=2m, RoC1=RoC2=1.5m, and also for the confocal case (R1,2=L)
+
+    get q() {
+        // Using eq. (57), Kogelnik & Li, 1966
+        var B = 2*this.L*(1-this.L/this.RoC1);
+        if (B == 0) {
+            
+        }
+        var A = 1-2*this.L/this.RoC1;
+        var D = 1+2*this.L*(2*this.L-this.RoC2-2*this.RoC1)/this.RoC1/this.RoC2;
+        var re = (D-A)/(2*B);
+        var im = -1/(2*B)*Math.sqrt(4-sqr(A+D));
+        var iq = new Complex(re, im);
+        return iq.invert();
+    }
+
+    w(lambda0, z) {
+        var q = this.q;
+        q.re += z;
+        var iq = q.invert();
+        if (iq.im > 0)
+            iq.im = -iq.im;
+        return Math.sqrt(-lambda0 / Math.PI / iq.im);
+    }
+    
+    w0(lambda0) {
+        return this.w(lambda0, -this.q.re);
+    }
+    
+    w1(lambda0) {
+        return this.w(lambda0, this.L);
+    }
+
+    w2(lambda0) {
+        return this.w(lambda0, 0);
+    }
 }
 
 function $(id)
@@ -108,12 +146,15 @@ function update()
     log_result('Reflected power', (cav.R * 100).toFixed(3), '%');
     log_result('Transmitted power', (cav.T * 100).toFixed(3), '%');
     var is_stable = cav.is_stable();
+    log_result('g1*g2', cav.g1g2.toFixed(4), '')
     log_result('Cavity stable', is_stable ? 'yes' : 'no', '');
     if (is_stable) {
-        log_result('g1*g2', cav.g1g2.toFixed(4), '')
         log_result('Beam waist', (cav.waist(lambda0)*1e6).toFixed(1), '&mu;m');
         log_result('Beam radius at M1', (cav.beamradius_at_M1(lambda0)*1e6).toFixed(1), '&mu;m');
         log_result('Beam radius at M2', (cav.beamradius_at_M2(lambda0)*1e6).toFixed(1), '&mu;m');
+        log_result('w0', (cav.w0(lambda0)*1e6).toFixed(1), '&mu;m');
+        log_result('w1', (cav.w1(lambda0)*1e6).toFixed(1), '&mu;m');
+        log_result('w2', (cav.w2(lambda0)*1e6).toFixed(1), '&mu;m');
     }
 }
 

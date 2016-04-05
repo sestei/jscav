@@ -60,6 +60,7 @@
     }
 </style>
 <body>
+<script type="text/javascript" src="complex.js"></script>
 <script type="text/javascript" src="cavity.js"></script>
 <h1>Linear Cavity Calculator</h1>
 <form>
@@ -68,11 +69,11 @@
     <label for="cav_R2">Reflectivity M2:</label>
     <span class="input_unit"><input type="number" id="cav_R2" value="99.9998" />%</span>
     <label for="cav_L">Mirror Separation:</label>
-    <span class="input_unit"><input type="number" id="cav_L" value="3994.5" />m</span>
+    <span class="input_unit"><input type="number" id="cav_L" value="2" />m</span>
     <label for="cav_RoC1">Radius of Curvature M1:</label>
-    <span class="input_unit"><input type="number" id="cav_RoC1" value="1934.0" />m</span>
+    <span class="input_unit"><input type="number" id="cav_RoC1" value="1.5" />m</span>
     <label for="cav_RoC2">Radius of Curvature M2:</label>
-    <span class="input_unit"><input type="number" id="cav_RoC2" value="2245.0" />m</span>
+    <span class="input_unit"><input type="number" id="cav_RoC2" value="1.5" />m</span>
     <label for="cav_lambda0">Wavelength:</label>
     <span class="input_unit"><input type="number" id="cav_lambda0" value="1064" />nm</span>
     <input type="button" id="cav_btnUpdate" onclick="update()" value="Calculate" />
