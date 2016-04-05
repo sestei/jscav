@@ -16,6 +16,27 @@ function waist_at_mirror(RoC1, RoC2, L, lambda0) {
     return Math.pow(sqr(lambda0*RoC1/Math.PI) * w4, 0.25);
 }
 
+function to_sensible_units(val, unit) {
+    var prefixes = {
+        '-9': 'n',
+        '-6': '&mu;',
+        '-3': 'm',
+        '0': '',
+        '3': 'k',
+        '6': 'M',
+        '9': 'G',
+    };
+
+    exponent = Math.floor(Math.log10(val)/3)*3;
+    if (exponent < -9) {
+        exponent = -9;
+    } else if (exponent > 9) {
+        exponent = 9;
+    }
+    val = val / Math.pow(10, exponent);
+    return [val.toFixed(3), prefixes[exponent] + unit];
+}
+
 class Cavity {
     constructor(R1, R2, L, RoC1, RoC2) {
         this.r1 = Math.sqrt(R1);
@@ -102,27 +123,27 @@ function update()
                      parseFloat($('cav_RoC2').value));
     var lambda0 = parseFloat($('cav_lambda0').value) * 1e-9;
     
-    log_result('FSR', cav.FSR.toExponential(3), 'Hz');
-    log_result('Finesse', cav.F.toFixed(1), '');
-    log_result('Power build-up', cav.buildup.toFixed(1), '');
-    log_result('Reflected power', (cav.R * 100).toFixed(3), '%');
-    log_result('Transmitted power', (cav.T * 100).toFixed(3), '%');
+    log_result('FSR', to_sensible_units(cav.FSR, 'Hz'));
+    log_result('Finesse', [cav.F.toFixed(1), '']);
+    log_result('Power build-up', [cav.buildup.toFixed(1), '']);
+    log_result('Reflected power', [(cav.R * 100).toFixed(3), '%']);
+    log_result('Transmitted power', [(cav.T * 100).toFixed(3), '%']);
     var is_stable = cav.is_stable();
-    log_result('Cavity stable', is_stable ? 'yes' : 'no', '');
+    log_result('g1*g2', [cav.g1g2.toFixed(4), ''])
+    log_result('Cavity stable', [is_stable ? 'yes' : 'no', '']);
     if (is_stable) {
-        log_result('g1*g2', cav.g1g2.toFixed(4), '')
-        log_result('Beam waist', (cav.waist(lambda0)*1e6).toFixed(1), '&mu;m');
-        log_result('Beam radius at M1', (cav.beamradius_at_M1(lambda0)*1e6).toFixed(1), '&mu;m');
-        log_result('Beam radius at M2', (cav.beamradius_at_M2(lambda0)*1e6).toFixed(1), '&mu;m');
+        log_result('Beam waist', to_sensible_units(cav.waist(lambda0), 'm'));
+        log_result('Beam radius at M1', to_sensible_units(cav.beamradius_at_M1(lambda0), 'm'));
+        log_result('Beam radius at M2', to_sensible_units(cav.beamradius_at_M2(lambda0), 'm'));
     }
 }
 
-function log_result(desc, value, unit)
+function log_result(desc, value)
 {
     out = get_result_window();
     out.innerHTML += '<span class="desc">'+desc+':</span> '
-        + '<span class="value">' + value + '</span><span class="unit">'
-        + unit + '</span><br />';
+        + '<span class="value">' + value[0] + '</span><span class="unit">'
+        + value[1] + '</span><br />';
 }
 
 function clear_results()
