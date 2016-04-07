@@ -4,7 +4,7 @@ jsCav is a simple calculator for linear optical cavities written in javascript,
 which allows it to run in any modern web browser (also on mobile devices!).
 Here's what it looks like and what it can calculate for you:
 
-<img src="jscav.png" />
+<img src="jscav.png" width="350" />
 
 To run, simply copy all files to one directory, then open the `index.html` in
 your favourite web browser (needs to be some recent version of
