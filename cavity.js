@@ -7,15 +7,6 @@ function sqr(x) {
     return x*x;
 }
 
-function waist_at_mirror(RoC1, RoC2, L, lambda0) {
-    if (RoC1 == L || RoC2 == L) {
-        w4 = L/(RoC1+RoC2-L);
-    } else {
-        w4 = (RoC2-L)/(RoC1-L) * L/(RoC1+RoC2-L);
-    }
-    return Math.pow(sqr(lambda0*RoC1/Math.PI) * w4, 0.25);
-}
-
 function to_sensible_units(val, unit) {
     var prefixes = {
         '-9': 'n',
@@ -67,55 +58,38 @@ class Cavity {
     }
 
     get g1() {
-        return (1-this.L / sqr(this.RoC1))
+        return (1-this.L / this.RoC1)
     }
 
     get g2() {
-        return (1-this.L / sqr(this.RoC2))
+        return (1-this.L / this.RoC2)
     }
 
     get g1g2() {
         return this.g1*this.g2;
     }
 
+    is_confocal() {
+        return (this.L == this.RoC1) && (this.L == this.RoC2);
+    }
+
     is_stable() {
         var g1g2 = this.g1g2;
-        if (g1g2 < 0 || g1g2 > 1) {
+        if (g1g2 == 0 && this.is_confocal()) {
+            return true;
+        }
+        if (g1g2 <= 0 || g1g2 >= 1) {
             return false;
         }
         return true;
     }
 
-    beamradius_at_M1(lambda0) {
-        return waist_at_mirror(this.RoC1, this.RoC2, this.L, lambda0);
-    }
-
-    beamradius_at_M2(lambda0) {
-        return waist_at_mirror(this.RoC2, this.RoC1, this.L, lambda0);
-    }
-
-    waist(lambda0) {
-        if (this.RoC1 == this.L && this.RoC2 == this.L) {
-            return Math.sqrt(lambda0*this.L/2/Math.PI);
-        } else if (this.RoC1 == this.L || this.RoC2 == this.L) {
-            console.log('RoC1 == L or RoC2 == L, but not both. Formula fails here :-(');
-            return -1;
-        }
-        var N = this.L*(this.RoC1-this.L)*(this.RoC2-this.L)*(this.RoC1+this.RoC2-this.L);
-        var D = sqr(this.RoC1+this.RoC2-2*this.L);
-
-        return Math.pow(sqr(lambda0/Math.PI)*N/D, 0.25);
-    }
-
-    // THIS NEW WAY OF CALCULATING THE BEAM SIZES FAILS FOR
-    // e.g. L=2m, RoC1=RoC2=1.5m, and also for the confocal case (R1,2=L)
-
     get q() {
+        if (this.is_confocal()) {
+            return new Complex(-this.L/2, this.L/2);
+        }
         // Using eq. (57), Kogelnik & Li, 1966
         var B = 2*this.L*(1-this.L/this.RoC1);
-        if (B == 0) {
-            
-        }
         var A = 1-2*this.L/this.RoC1;
         var D = 1+2*this.L*(2*this.L-this.RoC2-2*this.RoC1)/this.RoC1/this.RoC2;
         var re = (D-A)/(2*B);
@@ -170,12 +144,9 @@ function update()
     log_result('g1*g2', [cav.g1g2.toFixed(4), ''])
     log_result('Cavity stable', [is_stable ? 'yes' : 'no', '']);
     if (is_stable) {
-        log_result('Beam waist', to_sensible_units(cav.waist(lambda0), 'm'));
-        log_result('Beam radius at M1', to_sensible_units(cav.beamradius_at_M1(lambda0), 'm'));
-        log_result('Beam radius at M2', to_sensible_units(cav.beamradius_at_M2(lambda0), 'm'));
-        log_result('w0', to_sensible_units(cav.w0(lambda0), 'm'));
-        log_result('w1', to_sensible_units(cav.w1(lambda0), 'm'));
-        log_result('w2', to_sensible_units(cav.w2(lambda0), 'm'));
+        log_result('Beam waist', to_sensible_units(cav.w0(lambda0), 'm'));
+        log_result('Beam radius at M1', to_sensible_units(cav.w1(lambda0), 'm'));
+        log_result('Beam radius at M2', to_sensible_units(cav.w2(lambda0), 'm'));
     }
 }
 
