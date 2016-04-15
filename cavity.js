@@ -27,6 +27,11 @@ function to_sensible_units(val, unit) {
         '9': 'G',
     };
 
+    var sign = 1;
+    if (val < 0) {
+        sign = -1;
+        val *= -1.0;
+    }
     exponent = Math.floor(Math.log10(val)/3)*3;
     if (exponent < -9) {
         exponent = -9;
@@ -34,7 +39,7 @@ function to_sensible_units(val, unit) {
         exponent = 9;
     }
     val = val / Math.pow(10, exponent);
-    return [val.toFixed(3), prefixes[exponent] + unit];
+    return [sign*val.toFixed(3), prefixes[exponent] + unit];
 }
 
 class Cavity {
@@ -98,9 +103,9 @@ class Cavity {
             return new Complex(-this.L/2, this.L/2);
         }
         // Using eq. (57), Kogelnik & Li, 1966
-        var B = 2*this.L*(1-this.L/this.RoC1);
-        var A = 1-2*this.L/this.RoC1;
-        var D = 1+2*this.L*(2*this.L-this.RoC2-2*this.RoC1)/this.RoC1/this.RoC2;
+        var B = 2*this.L*(1-this.L/this.RoC2);
+        var A = 1-2*this.L/this.RoC2;
+        var D = 1+2*this.L*(2*this.L-this.RoC1-2*this.RoC2)/this.RoC1/this.RoC2;
         var re = (D-A)/(2*B);
         var im = -1/(2*B)*Math.sqrt(4-sqr(A+D));
         var iq = new Complex(re, im);
@@ -121,11 +126,15 @@ class Cavity {
     }
     
     w1(lambda0) {
-        return this.w(lambda0, this.L);
+        return this.w(lambda0, 0);
     }
 
     w2(lambda0) {
-        return this.w(lambda0, 0);
+        return this.w(lambda0, this.L);
+    }
+
+    get z0() {
+        return -this.q.re;
     }
 }
 
@@ -146,7 +155,7 @@ function update()
     
     log_result('FSR', to_sensible_units(cav.FSR, 'Hz'));
     log_result('Finesse', [cav.F.toFixed(1), '']);
-    log_result('Power build-up', [cav.buildup.toFixed(1), '']);
+    log_result('Power build-up factor', [cav.buildup.toFixed(1), '']);
     log_result('Reflected power', [(cav.R * 100).toFixed(3), '%']);
     log_result('Transmitted power', [(cav.T * 100).toFixed(3), '%']);
     var is_stable = cav.is_stable();
@@ -154,6 +163,7 @@ function update()
     log_result('Cavity stable', [is_stable ? 'yes' : 'no', '']);
     if (is_stable) {
         log_result('Beam waist', to_sensible_units(cav.w0(lambda0), 'm'));
+        log_result('Waist position from M1', to_sensible_units(cav.z0, 'm'));
         log_result('Beam radius at M1', to_sensible_units(cav.w1(lambda0), 'm'));
         log_result('Beam radius at M2', to_sensible_units(cav.w2(lambda0), 'm'));
     }
