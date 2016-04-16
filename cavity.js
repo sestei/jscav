@@ -49,6 +49,7 @@ class Cavity {
         this.L = L;
         this.RoC1 = RoC1;
         this.RoC2 = RoC2;
+        this._q = null;
     }
 
     get FSR() {
@@ -99,6 +100,9 @@ class Cavity {
     }
 
     get q() {
+        if (this._q)
+            return this._q.clone();
+
         if (this.is_confocal()) {
             return new Complex(-this.L/2, this.L/2);
         }
@@ -109,7 +113,8 @@ class Cavity {
         var re = (D-A)/(2*B);
         var im = -1/(2*B)*Math.sqrt(4-sqr(A+D));
         var iq = new Complex(re, im);
-        return iq.invert();
+        this._q = iq.invert();
+        return this._q;
     }
 
     w(lambda0, z) {

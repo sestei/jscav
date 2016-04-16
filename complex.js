@@ -32,4 +32,8 @@ class Complex {
     mag() {
         return this.re*this.re + this.im*this.im;
     }
+
+    clone() {
+        return new Complex(this.re, this.im);
+    }
 }
