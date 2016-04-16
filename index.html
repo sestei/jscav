@@ -82,6 +82,18 @@
     <span class="input_unit"><input type="number" id="cav_lambda0" value="1064" />nm</span>
     <input type="button" id="cav_btnUpdate" onclick="update()" value="Calculate" />
 </form>
+<script type="text/javascript">
+    var inputs = ["cav_R1", "cav_R2", "cav_L", "cav_RoC1", "cav_RoC2", "cav_lambda0"];
+    inputs.forEach(function (elem) {
+        $(elem).onkeypress = function(e) {
+            if (!e)
+                e = window.event;
+            var keycode = e.keycode || e.which;
+            if (keycode == '13')
+                update();
+        }
+    });
+</script>
 <div id="results">(Results will appear here)</div>
 <div id="copyright">&copy; 2016 S. Steinlechner, <a href="https://github.com/sestei/jscav">source code</a> available on github</div>
 </body>
