@@ -16,6 +16,14 @@ function sqr(x) {
     return x*x;
 }
 
+function R2T(percent) {
+    return (100.0-percent)*10000.0;
+}
+
+function T2R(ppm) {
+    return 100.0-ppm/10000.0;
+}
+
 function to_sensible_units(val, unit) {
     var prefixes = {
         '-9': 'n',
@@ -151,8 +159,19 @@ function $(id)
 function update()
 {
     clear_results();
-    cav = new Cavity(parseFloat($('cav_R1').value) / 100.0,
-                     parseFloat($('cav_R2').value) / 100.0,
+    
+    var R1, R2;
+    if ($('cav_RT1_R').checked)
+        R1 = $('cav_R1').value;
+    else
+        R1 = T2R($('cav_T1').value);
+    if ($('cav_RT2_R').checked)
+        R2 = $('cav_R2').value;
+    else
+        R2 = T2R($('cav_T2').value);
+
+    cav = new Cavity(R1 / 100.0,
+                     R2 / 100.0,
                      parseFloat($('cav_L').value),
                      parseFloat($('cav_RoC1').value),
                      parseFloat($('cav_RoC2').value));
