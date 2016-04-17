@@ -1,35 +1,37 @@
 <!DOCTYPE html>
 <html>
 <meta name="viewport" content="width=device-width" />
+<link href='https://fonts.googleapis.com/css?family=Roboto+Mono' rel='stylesheet' type='text/css'>
 <style type="text/css">
     /*
        this uses the monokai colour scheme,
        http://www.monokai.nl/blog/2006/07/15/textmate-color-theme/
     */
     body {
-        font-family: 'Arial', 'Helvetica';
+        font-family:  'Roboto Mono', 'sans-serif';
+        font-size: 14px;
         background-color: #49483E;
         color: #F8F8F2;
     }
     h1 {
-        font-size: 150%;
+        font-size: 160%;
         color: #FD971F;
     }
     input {
-        font-family: 'Arial', 'Helvetica';
+        font-family: 'Roboto Mono', 'sans-serif';
         font-size: 100%;
         border: 1px #333;
     }
     .input_unit {
         display: block;
-        width: 130px;
+        width: 140px;
         border: 1px solid #333;
         margin-bottom: 0.5em;
         background-color: #282828;
         color: #E6DB74;
     }
     .input_unit input {
-        font-family: 'Arial', 'Helvetica';
+        font-family: 'Roboto Mono', 'sans-serif';
         font-size: 100%;
         border: 0;
         width: 100px;
@@ -39,8 +41,7 @@
         color: #66D9EF;
     }
     #results {
-        font-family: monospace;
-        font-size: 110%;
+        font-family: 'Roboto Mono', 'monospace';
         margin-top: 1em;
         padding: 0.5em;
         border: 1px solid #333;
@@ -68,22 +69,44 @@
 <script type="text/javascript" src="cavity.js"></script>
 <h1>Linear Cavity Calculator</h1>
 <form>
-    <label for="cav_R1">Reflectivity M1:</label>
-    <span class="input_unit"><input type="number" id="cav_R1" value="98.6" />%</span>
-    <label for="cav_R2">Reflectivity M2:</label>
-    <span class="input_unit"><input type="number" id="cav_R2" value="99.9998" />%</span>
-    <label for="cav_L">Mirror Separation:</label>
+    <input type="radio" name="cav_RT1" id="cav_RT1_R" value="R" checked />
+    <label for="cav_RT1_R">M1: Reflectivity</label><br/>
+    <input type="radio" name="cav_RT1" id="cav_RT1_T" value="T" />
+    <label for="cav_RT1_T">M1: Transmissivity</label>
+    <span class="input_unit" id="cav_M1_R"><input type="number" id="cav_R1" value="98.6" />%</span>
+    <span class="input_unit" id="cav_M1_T" style="display:none"><input type="number" id="cav_T1" value="0" />ppm</span>
+    <input type="radio" name="cav_RT2" id="cav_RT2_R" value="R" checked />
+    <label for="cav_RT2_R">M2: Reflectivity</label><br/>
+    <input type="radio" name="cav_RT2" id="cav_RT2_T" value="T" />
+    <label for="cav_RT2_T">M2: Transmissivity</label>
+    <span class="input_unit" id="cav_M2_R"><input type="number" id="cav_R2" value="99.98" />%</span>
+    <span class="input_unit" id="cav_M2_T" style="display:none"><input type="number" id="cav_T2" value="0" />ppm</span>
+    <label for="cav_L">Mirror Separation</label>
     <span class="input_unit"><input type="number" id="cav_L" value="2" />m</span>
-    <label for="cav_RoC1">Radius of Curvature M1:</label>
+    <label for="cav_RoC1">M1: Radius of Curvature</label>
     <span class="input_unit"><input type="number" id="cav_RoC1" value="1.5" />m</span>
-    <label for="cav_RoC2">Radius of Curvature M2:</label>
+    <label for="cav_RoC2">M2: Radius of Curvature</label>
     <span class="input_unit"><input type="number" id="cav_RoC2" value="1.5" />m</span>
-    <label for="cav_lambda0">Wavelength:</label>
+    <label for="cav_lambda0">Wavelength</label>
     <span class="input_unit"><input type="number" id="cav_lambda0" value="1064" />nm</span>
     <input type="button" id="cav_btnUpdate" onclick="update()" value="Calculate" />
 </form>
 <script type="text/javascript">
-    var inputs = ["cav_R1", "cav_R2", "cav_L", "cav_RoC1", "cav_RoC2", "cav_lambda0"];
+    function swap_R_T(mirror, is_R) {
+        var inpR = $('cav_M'+mirror+'_R');
+        var inpT = $('cav_M'+mirror+'_T');
+        if (is_R) {
+            $('cav_T'+mirror).value = R2T($('cav_R'+mirror).value).toFixed(1);
+            inpR.style.display = 'none';
+            inpT.style.display = 'block';
+        } else {
+            $('cav_R'+mirror).value = T2R($('cav_T'+mirror).value);
+            inpR.style.display = 'block';
+            inpT.style.display = 'none';
+        }
+    }
+
+    var inputs = ["cav_R1", "cav_R2", "cav_T1", "cav_T2", "cav_L", "cav_RoC1", "cav_RoC2", "cav_lambda0"];
     inputs.forEach(function (elem) {
         $(elem).onkeypress = function(e) {
             if (!e)
@@ -93,6 +116,12 @@
                 update();
         }
     });
+
+    $('cav_RT1_R').onclick = function(e) { swap_R_T('1', e.checked); }
+    $('cav_RT1_T').onclick = function(e) { swap_R_T('1', !e.checked); }
+    $('cav_RT2_R').onclick = function(e) { swap_R_T('2', e.checked); }
+    $('cav_RT2_T').onclick = function(e) { swap_R_T('2', !e.checked); }
+
 </script>
 <div id="results">(Results will appear here)</div>
 <div id="copyright">&copy; 2016 S. Steinlechner, <a href="https://github.com/sestei/jscav">source code</a> available on github</div>
