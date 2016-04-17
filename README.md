@@ -6,12 +6,11 @@ Here's what it looks like and what it can calculate for you:
 
 <img src="jscav.png" width="350" />
 
-To run, simply copy all files to one directory, then open the `index.html` in
-your favourite web browser (needs to be some recent version of
-Chrome/Safari/Opera/Firefox/...).
+You can run it [directly from github](http://sestei.github.com/jscav)!
 
-It is of course possible to host this on a webserver, for easy access. Since it
-runs in the user's web browser, there are absolutely no dependencies.
+Alternatively, you can simply copy all files to a directory of your choice and
+then open the `index.html` in your favourite web browser (needs to be some
+recent version of Chrome/Safari/Opera/Firefox/...).
 
 ## License
 
@@ -21,5 +20,4 @@ http://creativecommons.org/licenses/by-nc-sa/4.0/ or send a letter to Creative
 Commons, PO Box 1866, Mountain View, CA 94042, USA.
 
 ----
-
 2016, S. Steinlechner
