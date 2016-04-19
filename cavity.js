@@ -16,12 +16,22 @@ function sqr(x) {
     return x*x;
 }
 
+/****** TODO: make function that checks R is in sensible range, then use that here and also in the actual calculation */
+
+function checkR(R) {
+    if (R < 0.0)
+        return 0.0;
+    else if (R > 100.0)
+        return 100.0;
+    return R;
+}
+
 function R2T(percent) {
-    return (100.0-percent)*10000.0;
+    return (100.0-checkR(percent))*10000.0;
 }
 
 function T2R(ppm) {
-    return 100.0-ppm/10000.0;
+    return checkR(100.0-ppm/10000.0);
 }
 
 function to_sensible_units(val, unit) {
@@ -50,13 +60,20 @@ function to_sensible_units(val, unit) {
     return [sign*val.toFixed(3), prefixes[exponent] + unit];
 }
 
+function isPlane(RoC) {
+    if (RoC == 0.0)
+        return Infinity;
+    else
+        return RoC;
+}
+
 class Cavity {
     constructor(R1, R2, L, RoC1, RoC2) {
         this.r1 = Math.sqrt(R1);
         this.r2 = Math.sqrt(R2);
         this.L = L;
-        this.RoC1 = RoC1;
-        this.RoC2 = RoC2;
+        this.RoC1 = isPlane(RoC1);
+        this.RoC2 = isPlane(RoC2);
         this._q = null;
     }
 
@@ -117,10 +134,11 @@ class Cavity {
         // Using eq. (57), Kogelnik & Li, 1966
         var B = 2*this.L*(1-this.L/this.RoC2);
         var A = 1-2*this.L/this.RoC2;
-        var D = 1+2*this.L*(2*this.L-this.RoC1-2*this.RoC2)/this.RoC1/this.RoC2;
+        var D = 1+2*this.L*(this.L/this.RoC1/this.RoC2 - 1/this.RoC2 - 2/this.RoC1);
         var re = (D-A)/(2*B);
         var im = -1/(2*B)*Math.sqrt(4-sqr(A+D));
         var iq = new Complex(re, im);
+        console.log(A,B,D,re,im);
         this._q = iq.invert();
         return this._q;
     }
@@ -162,11 +180,11 @@ function update()
     
     var R1, R2;
     if ($('cav_RT1_R').checked)
-        R1 = $('cav_R1').value;
+        R1 = checkR($('cav_R1').value);
     else
         R1 = T2R($('cav_T1').value);
     if ($('cav_RT2_R').checked)
-        R2 = $('cav_R2').value;
+        R2 = checkR($('cav_R2').value);
     else
         R2 = T2R($('cav_T2').value);
 
