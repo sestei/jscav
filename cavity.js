@@ -134,11 +134,10 @@ class Cavity {
         // Using eq. (57), Kogelnik & Li, 1966
         var B = 2*this.L*(1-this.L/this.RoC2);
         var A = 1-2*this.L/this.RoC2;
-        var D = 1+2*this.L*(this.L/this.RoC1/this.RoC2 - 1/this.RoC2 - 2/this.RoC1);
+        var D = 1+2*this.L*(2*this.L/this.RoC1/this.RoC2 - 1/this.RoC2 - 2/this.RoC1);
         var re = (D-A)/(2*B);
         var im = -1/(2*B)*Math.sqrt(4-sqr(A+D));
         var iq = new Complex(re, im);
-        console.log(A,B,D,re,im);
         this._q = iq.invert();
         return this._q;
     }
