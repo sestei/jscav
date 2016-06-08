@@ -16,8 +16,6 @@ function sqr(x) {
     return x*x;
 }
 
-/****** TODO: make function that checks R is in sensible range, then use that here and also in the actual calculation */
-
 function checkR(R) {
     if (R < 0.0)
         return 0.0;
@@ -196,6 +194,7 @@ function update()
     
     log_result('FSR', to_sensible_units(cav.FSR, 'Hz'));
     log_result('Finesse', [cav.F.toFixed(1), '']);
+    log_result('FWHM', to_sensible_units(cav.FSR/cav.F, 'Hz'));
     log_result('Power build-up factor', [cav.buildup.toFixed(1), '']);
     log_result('Reflected power', [(cav.R * 100).toFixed(3), '%']);
     log_result('Transmitted power', [(cav.T * 100).toFixed(3), '%']);
