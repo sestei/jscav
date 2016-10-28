@@ -21,7 +21,7 @@
        http://www.monokai.nl/blog/2006/07/15/textmate-color-theme/
     */
     body {
-        font-family:  'Roboto Mono', 'sans-serif';
+        font-family: 'Roboto Mono', 'sans-serif';
         font-size: 14px;
         background-color: #49483E;
         color: #F8F8F2;
@@ -29,6 +29,22 @@
     h1 {
         font-size: 160%;
         color: #FD971F;
+    }
+    a {
+        color: #AE81FF;
+        text-decoration: none;
+    }
+    a:hover {
+        color: #F8F8F2;
+    }
+    a.drawer:before {
+        content: url('arrow.svg');
+        display: inline-block;
+        width: 14px;
+        height: 14px;
+    }
+    div.drawer {
+        margin-bottom: 1em;
     }
     input {
         font-family: 'Roboto Mono', 'sans-serif';
@@ -60,6 +76,13 @@
         border: 1px solid #333;
         background-color: #282828;
     }
+    #help {
+        font-family: 'Roboto Mono', 'monospace';
+        padding: 0.5em;
+        border: 1px solid #333;
+        background-color: #282828;
+        display: none;
+    }
     #results .value {
         color: #A6E22E;
     }
@@ -72,9 +95,8 @@
         color: #888;
         font-size: 70%;
     }
-    #copyright a {
-        color: #AE81FF;
-        text-decoration: none;
+    canvas {
+
     }
 </style>
 </head>
@@ -82,6 +104,10 @@
 <script type="text/javascript" src="complex.js"></script>
 <script type="text/javascript" src="cavity.js"></script>
 <h1>Linear Cavity Calculator</h1>
+<div class="drawer">
+    <a class="drawer" href="#" onclick="toggle_visibility('help'); return false;">How do I use this?</a>
+    <div id="help">Sorry, the help isn't ready yet :-(</div>
+</div>
 <form>
     <input type="radio" name="cav_RT1" id="cav_RT1_R" value="R" checked />
     <label for="cav_RT1_R">M1: Reflectivity</label><br/>
@@ -118,6 +144,14 @@
             inpR.style.display = 'block';
             inpT.style.display = 'none';
         }
+    }
+
+    function toggle_visibility(obj) {
+        obj = $(obj);
+        if (obj.style.display == 'block')
+            obj.style.display = 'none';
+        else
+            obj.style.display = 'block';
     }
 
     var inputs = ["cav_R1", "cav_R2", "cav_T1", "cav_T2", "cav_L", "cav_RoC1", "cav_RoC2", "cav_lambda0"];
