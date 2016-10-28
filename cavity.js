@@ -107,6 +107,17 @@ class Cavity {
         return this.g1*this.g2;
     }
 
+    get mode_spacing() {
+        // using formula from LIGO-T1300189
+        var zeta;
+        if (this.g1 < 0.0)
+            zeta = 2.0*Math.acos(-Math.sqrt(this.g1g2));
+        else
+            zeta = 2.0*Math.acos(Math.sqrt(this.g1g2));
+
+        return zeta/(2*Math.PI)*this.FSR;
+    }
+
     is_confocal() {
         return (this.L == this.RoC1) && (this.L == this.RoC2);
     }
@@ -166,6 +177,84 @@ class Cavity {
     }
 }
 
+function mode_plot(FSR, spacing)
+{
+    function draw_axis() {
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = '#F8F8F2';
+        ctx.fillStyle = '#F8F8F2';
+        ctx.beginPath();
+        ctx.moveTo(10,h-40);
+        ctx.lineTo(w-11,h-40);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(w-10,h-40);
+        ctx.lineTo(w-25,h-35);
+        ctx.lineTo(w-20,h-40);
+        ctx.lineTo(w-25,h-45);
+        ctx.fill()
+
+        ctx.font = '12px Roboto Mono';
+        ctx.textAlign = 'center';
+        ctx.fillText('Higher-order mode spectrum', w/2, h-20)    
+    }
+
+    function draw_FSR() {
+        ctx.beginPath();
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = '#66D9EF';
+        ctx.moveTo(0,0);
+        ctx.lineTo(0,50);
+        ctx.moveTo(100,0);
+        ctx.lineTo(100,50);
+        ctx.stroke();
+
+        ctx.font = '3px Roboto Mono';
+        ctx.textAlign = 'center';
+        ctx.fillStyle = '#F8F8F2';
+        ctx.fillText('0', 0, -2);
+        ctx.fillText('0', 100, -2);
+    }
+    
+    function draw_HOM() {
+        var shift = spacing / FSR * 100;
+        var pos = shift;
+        var N = 20;
+        ctx.font = '3px Roboto Mono';
+        ctx.textAlign = 'center';
+        ctx.fillStyle = '#F8F8F2';
+        for (var i=1; i<=N; i++) {
+            ctx.beginPath();
+            ctx.lineWidth = 0.5;
+            ctx.strokeStyle = 'rgba(166, 226, 46, '+(1.0-(i-1)/N)+')';
+            ctx.moveTo(pos, 50);
+            ctx.lineTo(pos, 50*(i-1)/N);
+            ctx.stroke();
+            ctx.fillText(i, pos, 50*(i-1)/N-2)
+            pos += shift;
+            pos %= 100;
+        }
+    }
+    var w = 400, h = 250;
+    var window = get_result_window();
+    window.innerHTML += '<canvas id="mode_spacing" width="'+(w*2)+'" height="'+(h*2)+'"></canvas>';
+    var canvas = $('mode_spacing');
+    canvas.style.width = w+'px';
+    canvas.style.height = h+'px';
+
+    var ctx = canvas.getContext('2d');
+    ctx.scale(2,2);
+    ctx.translate(0.5, 0.5);
+
+    draw_axis();
+    ctx.translate(20,40);
+    //ctx.scale((w-70)/100,-1*(h-100)/100);
+    ctx.scale((w-60)/100,(w-70)/100);
+    draw_FSR();
+    draw_HOM();    
+}
+
 function $(id)
 {
     return document.getElementById(id);
@@ -185,7 +274,7 @@ function update()
     else
         R2 = T2R($('cav_T2').value);
 
-    cav = new Cavity(R1 / 100.0,
+    var cav = new Cavity(R1 / 100.0,
                      R2 / 100.0,
                      parseFloat($('cav_L').value),
                      parseFloat($('cav_RoC1').value),
@@ -202,16 +291,19 @@ function update()
     log_result('g1*g2', [cav.g1g2.toFixed(4), ''])
     log_result('Cavity stable', [is_stable ? 'yes' : 'no', '']);
     if (is_stable) {
+        log_result('Mode spacing', to_sensible_units(cav.mode_spacing, 'Hz'));
         log_result('Beam waist', to_sensible_units(cav.w0(lambda0), 'm'));
         log_result('Waist position from M1', to_sensible_units(cav.z0, 'm'));
         log_result('Beam radius at M1', to_sensible_units(cav.w1(lambda0), 'm'));
         log_result('Beam radius at M2', to_sensible_units(cav.w2(lambda0), 'm'));
+
+        mode_plot(cav.FSR, cav.mode_spacing);
     }
 }
 
 function log_result(desc, value)
 {
-    out = get_result_window();
+    var out = get_result_window();
     out.innerHTML += '<span class="desc">'+desc+':</span> '
         + '<span class="value">' + value[0] + '</span><span class="unit">'
         + value[1] + '</span><br />';
@@ -219,7 +311,7 @@ function log_result(desc, value)
 
 function clear_results()
 {
-    out = get_result_window();
+    var out = get_result_window();
     out.innerHTML = '';
 }
 
