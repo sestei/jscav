@@ -202,7 +202,7 @@ function mode_plot(FSR, spacing)
 
     function draw_FSR() {
         ctx.beginPath();
-        ctx.lineWidth = 1;
+        ctx.lineWidth = 0.5;
         ctx.strokeStyle = '#66D9EF';
         ctx.moveTo(0,0);
         ctx.lineTo(0,50);
@@ -210,7 +210,7 @@ function mode_plot(FSR, spacing)
         ctx.lineTo(100,50);
         ctx.stroke();
 
-        ctx.font = '3px Roboto Mono';
+        ctx.font = '4px Roboto Mono';
         ctx.textAlign = 'center';
         ctx.fillStyle = '#F8F8F2';
         ctx.fillText('0', 0, -2);
@@ -221,7 +221,7 @@ function mode_plot(FSR, spacing)
         var shift = spacing / FSR * 100;
         var pos = shift;
         var N = 20;
-        ctx.font = '3px Roboto Mono';
+        ctx.font = '4px Roboto Mono';
         ctx.textAlign = 'center';
         ctx.fillStyle = '#F8F8F2';
         for (var i=1; i<=N; i++) {
@@ -229,14 +229,14 @@ function mode_plot(FSR, spacing)
             ctx.lineWidth = 0.5;
             ctx.strokeStyle = 'rgba(166, 226, 46, '+(1.0-(i-1)/N)+')';
             ctx.moveTo(pos, 50);
-            ctx.lineTo(pos, 50*(i-1)/N);
+            ctx.lineTo(pos, 50*i/(N+1));
             ctx.stroke();
-            ctx.fillText(i, pos, 50*(i-1)/N-2)
+            ctx.fillText(i, pos, 50*i/(N+1)-2);
             pos += shift;
             pos %= 100;
         }
     }
-    var w = 400, h = 250;
+    var w = 350, h = 220;
     var window = get_result_window();
     window.innerHTML += '<canvas id="mode_spacing" width="'+(w*2)+'" height="'+(h*2)+'"></canvas>';
     var canvas = $('mode_spacing');
