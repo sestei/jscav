@@ -15,6 +15,9 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="favicon.ico" type="image/x-icon" />
 <link href='https://fonts.googleapis.com/css?family=Roboto+Mono' rel='stylesheet' type='text/css'>
+<!--<script type="text/javascript" async
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">-->
+</script>
 <style type="text/css">
     /*
        this uses the monokai colour scheme,
@@ -30,6 +33,20 @@
         font-size: 160%;
         color: #FD971F;
     }
+    h2 {
+        font-size: 130%;
+        color: #FD971F;
+        margin-top: 0;
+    }
+    em {
+        color: #66D9EF;
+        font-style: normal;
+    }
+    s {
+        color: #A6E22E;
+        font-style: normal;
+        text-decoration: none;
+    }
     a {
         color: #AE81FF;
         text-decoration: none;
@@ -40,7 +57,7 @@
     a.drawer:before {
         content: url('arrow.svg');
         display: inline-block;
-        width: 14px;
+        width: 12px;
         height: 14px;
     }
     div.drawer {
@@ -78,10 +95,11 @@
     }
     #help {
         font-family: 'Roboto Mono', 'monospace';
+        margin-top: 0.1em;
         padding: 0.5em;
         border: 1px solid #333;
         background-color: #282828;
-        display: none;
+        display: block;
     }
     #results .value {
         color: #A6E22E;
@@ -106,7 +124,41 @@
 <h1>Linear Cavity Calculator</h1>
 <div class="drawer">
     <a class="drawer" href="#" onclick="toggle_visibility('help'); return false;">How do I use this?</a>
-    <div id="help">Sorry, the help isn't ready yet :-(</div>
+    <div id="help">
+    <h2>What does this calculate?</h2>
+    <p>This is a simple calculator for linear optical resonators (cavities), i.e. for an optical system that looks like this:</p>
+    <p><img src="lincav.svg" width="280" height="100"></p>
+    <p>If this doesn't look familiar to you, you probably won't need this calculator.<br>
+    You will need to provide some basic optical and geometric properties of the cavity:</p>
+    <ul>
+        <li><em>Power reflectivity</em> (or transmission) of the two mirrors,</li>
+        <li><em>Radii of curvature</em> (RoC) of the mirrors,</li>
+        <li>The <em>separation</em> between the two mirrors (assumed to be air, with index of refraction = 1),</li>
+        <li>The operating <em>wavelength</em>.</li>
+    </ul>
+    <p>From these inputs, the calculator will do some heavy thinking and then come up with these results:</p>
+    <ul>
+        <li>the <s>FSR</s> (free spectral range), i.e. the frequency separation between two successive cavity resonances,</li>
+        <li>the <s>finesse</s> and the spectral width of each resonance, given as <s>FWHM</s> (full width at half maximum),</li>
+        <li>the <s>power-buildup</s> inside the cavity,</li>
+        <li>the <s>transmitted</s> and <s>reflected</s> power on resonance, in percent of the incident power,</li>
+        <li>the cavity <s>g-factor product</s>, this product must be between 0 and 1 for a stable cavity, i.e. a cavity that supports a TEM<sub>00</sub> fundamental mode.</li>
+    </ul>
+    <p>The above results are always calculated, even if the cavity is unstable. This is done for convenience: one can quickly play around with e.g. the mirror reflectivities to find a suitable finesse value, without caring about suitable RoCs. Of course, to also see those values in an experiment one would first of all have to make the cavity stable.<br>
+    For a stable cavity, the following additional parameters will be calculated:</p>
+    <ul>
+        <li>the <s>mode spacing</s> (in frequency space) between successive higher-order mode orders, e.g. how far the TEM<sub>01</sub> is separated from the TEM<sub>00</sub> mode,</li>
+        <li>the <s>beam waist</s>, the 1/e<sup>2</sup> radius of the fundamental mode at its smallest point,</li>
+        <li>the <s>waist position</s>, relative to mirror M<sub>1</sub>, where positive values are towards M<sub>2</sub>,</li>
+        <li>the <s>spot sizes</s> (1/e<sup>2</sup> radius) of the fundamental mode on the two mirrors,</li>
+        <li>a <s>mode spectrum</s> showing the <s>resonance locations</s> of the first 20 higher-order modes, this can be used to quickly check for mode degeneracy, i.e. when two modes of different mode order coincide.</li>
+    </ul>
+    <p>Note that the calculation assumes that all modes of Nth order (TEM<sub>mn</sub> where m+n=N) are degenerate. This is usually a good approximation as long as there is rotational symmetry within the cavity, e.g. the mirrors are non-astigmatic.</p>
+
+    <h2>What do I need to run it?</h2>
+    <p>Just a recent version of one of the standard web browsers (Chrome, Safari, Firefox, Edge, Opera, etc.). It should even run fine on your mobile phone! To keep things simple (for me, mostly...), I used some code techniques that were introduced only recently (as of 2016), so if you're stuck with an older web browser for some reason, it's highly likely that this calculator won't work for you, sorry.<br>
+    The calculation runs entirely inside your browser, so apart from loading this webpage once, it does not need any internet connection. Oh, and if you disabled JavaScript, then this won't work at all.</p>
+    </div>
 </div>
 <form>
     <input type="radio" name="cav_RT1" id="cav_RT1_R" value="R" checked />
@@ -169,6 +221,7 @@
     $('cav_RT1_T').onclick = function(e) { swap_R_T('1', !e.checked); }
     $('cav_RT2_R').onclick = function(e) { swap_R_T('2', e.checked); }
     $('cav_RT2_T').onclick = function(e) { swap_R_T('2', !e.checked); }
+    $('help').style.display = 'none';
 
 </script>
 <div id="results">(Results will appear here)</div>
