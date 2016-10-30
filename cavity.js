@@ -283,7 +283,9 @@ function update()
     
     log_result('FSR', to_sensible_units(cav.FSR, 'Hz'));
     log_result('Finesse', [cav.F.toFixed(1), '']);
-    log_result('FWHM', to_sensible_units(cav.FSR/cav.F, 'Hz'));
+    var FWHM = cav.FSR/cav.F;
+    log_result('Linewidth (FWHM)', to_sensible_units(FWHM, 'Hz'));
+    log_result('Cavity pole', to_sensible_units(FWHM/2.0, 'Hz'));
     log_result('Power build-up factor', [cav.buildup.toFixed(1), '']);
     log_result('Reflected power', [(cav.R * 100).toFixed(3), '%']);
     log_result('Transmitted power', [(cav.T * 100).toFixed(3), '%']);
