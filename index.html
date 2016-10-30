@@ -139,7 +139,7 @@
     <p>From these inputs, the calculator will do some heavy thinking and then come up with these results:</p>
     <ul>
         <li>the <s>FSR</s> (free spectral range), i.e. the frequency separation between two successive cavity resonances,</li>
-        <li>the <s>finesse</s> and the spectral width of each resonance, given as <s>FWHM</s> (full width at half maximum),</li>
+        <li>the <s>finesse</s> and the spectral <s>linewidth</s> of each resonance, given as FWHM (full width at half maximum) and cavity pole (half width at half maximum),</li>
         <li>the <s>power-buildup</s> inside the cavity,</li>
         <li>the <s>transmitted</s> and <s>reflected</s> power on resonance, in percent of the incident power,</li>
         <li>the cavity <s>g-factor product</s>, this product must be between 0 and 1 for a stable cavity, i.e. a cavity that supports a TEM<sub>00</sub> fundamental mode.</li>
@@ -151,13 +151,15 @@
         <li>the <s>beam waist</s>, the 1/e<sup>2</sup> radius of the fundamental mode at its smallest point,</li>
         <li>the <s>waist position</s>, relative to mirror M<sub>1</sub>, where positive values are towards M<sub>2</sub>,</li>
         <li>the <s>spot sizes</s> (1/e<sup>2</sup> radius) of the fundamental mode on the two mirrors,</li>
-        <li>a <s>mode spectrum</s> showing the <s>resonance locations</s> of the first 20 higher-order modes, this can be used to quickly check for mode degeneracy, i.e. when two modes of different mode order coincide.</li>
+        <li>a <s>mode spectrum</s> showing the <s>resonance locations</s> of the first 20 higher-order modes; this can be used to quickly check for mode degeneracy, i.e. when two modes of different mode order coincide<sup>&dagger;</sup>.</li>
     </ul>
     <p>Note that the calculation assumes that all modes of Nth order (TEM<sub>mn</sub> where m+n=N) are degenerate. This is usually a good approximation as long as there is rotational symmetry within the cavity, e.g. the mirrors are non-astigmatic.</p>
 
+    <p style="font-size:90%;font-style:italic"><sup>&dagger;</sup>The height and intensity of the lines just serve to visually distinguish them and should not be mistaken for a representation of the actual mode content.</p>
+
     <h2>What do I need to run it?</h2>
     <p>Just a recent version of one of the standard web browsers (Chrome, Safari, Firefox, Edge, Opera, etc.). It should even run fine on your mobile phone! To keep things simple (for me, mostly...), I used some code techniques that were introduced only recently (as of 2016), so if you're stuck with an older web browser for some reason, it's highly likely that this calculator won't work for you, sorry.<br>
-    The calculation runs entirely inside your browser, so apart from loading this webpage once, it does not need any internet connection. Oh, and if you disabled JavaScript, then this won't work at all.</p>
+    The calculation runs entirely inside your browser, so apart from loading this webpage once, it does not need any internet connection. Oh, and if you disable JavaScript, then this won't work at all.</p>
     </div>
 </div>
 <form>
