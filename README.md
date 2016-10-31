@@ -9,7 +9,7 @@ You can run it [directly from github](http://sestei.github.com/jscav)!
 
 This is a simple calculator for linear optical resonators (cavities), i.e. for an optical system that looks like this:
 
-<img src="lincav.svg" width="280" height="100" />
+<img src="lincav.png" width="280" height="100" />
 
 If this doesn't look familiar to you, you probably won't need this calculator.
 You will need to provide some basic optical and geometric properties of the cavity:
