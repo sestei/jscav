@@ -190,15 +190,16 @@ function mode_plot(FSR, spacing)
 
         ctx.beginPath();
         ctx.moveTo(w-10,h-40);
-        ctx.lineTo(w-25,h-35);
-        ctx.lineTo(w-20,h-40);
-        ctx.lineTo(w-25,h-45);
+        ctx.lineTo(w-20,h-35);
+        ctx.lineTo(w-15,h-40);
+        ctx.lineTo(w-20,h-45);
         ctx.fill()
 
         ctx.font = '12px Roboto Mono';
         ctx.textAlign = 'center';
-        ctx.fillText('Higher-order mode spectrum', w/2, h-20)    
-    }
+        ctx.fillText('Higher-order mode spectrum', w/2, h-20)
+        ctx.fillText('f', w-15,h-20);
+   }
 
     function draw_FSR() {
         ctx.beginPath();
