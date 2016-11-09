@@ -54,6 +54,9 @@ Just a recent version of one of the standard web browsers (Chrome, Safari, Firef
 You can run the calculator [directly from github](http://sestei.github.com/jscav). As the calculation runs entirely within the web browser on your computer, an active internet connection should not be necessary after you have loaded the page. Alternatively, you can simply copy all files to a directory of your choice and
 then open the `index.html` in your favourite web browser.
 
+## What if I get wrong results?
+Whoops :-( Would you please [file a bug report](https://github.com/sestei/jscav/issues) detailing the parameters you used and what went wrong?
+
 ## License
 
 This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License. To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/4.0/ or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
