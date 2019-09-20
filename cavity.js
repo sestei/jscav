@@ -8,6 +8,8 @@ http://creativecommons.org/licenses/by-nc-sa/4.0/ or send a letter to Creative
 Commons, PO Box 1866, Mountain View, CA 94042, USA.
 */
 
+$ = document.getElementById.bind(document);
+
 var Constants = {
     c: 299792458,
 }
@@ -254,11 +256,6 @@ function mode_plot(FSR, spacing)
     ctx.scale((w-60)/100,(w-70)/100);
     draw_FSR();
     draw_HOM();    
-}
-
-function $(id)
-{
-    return document.getElementById(id);
 }
 
 function update()

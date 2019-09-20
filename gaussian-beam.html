@@ -1,0 +1,103 @@
+<html>
+<style type="text/css">
+  body {
+    background: ivory;
+  }
+  canvas {
+    border: 1px solid red;
+  }
+</style>
+<script type="text/javascript" src="cavity.js"></script>
+<body>
+<h1>Canvas Drawing test</h1>
+<canvas id="canvas_plot" width="800" height="400"></canvas>
+<script type="text/javascript">
+
+var plot_canvas = $('canvas_plot');
+var plot_ctx = canvas_plot.getContext('2d');
+
+var xdata = [0, 100, 200, 300, 400, 500];
+var ydata = [50, 40, 30, 20, 30, 40];
+
+function beam_radius(z, z0, zR, w0)
+{
+  var w = (z-z0)/zR;
+  return w0*Math.sqrt(1+w*w);
+}
+
+
+function draw_lens(ctx, x, d, r, roc_left, roc_right)
+{
+  // TODO: total thicknes should take into account RoCs;
+  //       this is then not xd, because xd is needed to calculate the arcs,
+  //       and they are slightly outside the surface, not on the surface.
+  xd = (R) => r*Math.tan(Math.asin(r/R));
+  
+  ctx.save();
+  ctx.translate(x-d/2, 0);
+  
+  var grd = ctx.createLinearGradient(0,-r,d,r);
+  grd.addColorStop(0,'#F8F9F9');
+  grd.addColorStop(1,'#A9CCE3');
+  
+  ctx.beginPath();
+  ctx.moveTo(0,-r);
+  ctx.lineTo(d,-r);
+  ctx.arcTo(d+xd(roc_right),0,d,r,Math.abs(roc_right));
+  ctx.lineTo(d,r);
+  ctx.lineTo(0,r);
+  ctx.arcTo(-xd(roc_left),0,0,-r,Math.abs(roc_left));
+  ctx.closePath();
+  ctx.fillStyle = grd;
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.restore();
+}
+
+function draw(canvas, ctx)
+{
+  var xdata = range(0,canvas.width,51);
+  var ydata = xdata.map((x) => beam_radius(x, 250, 150, 4));
+  
+  ctx.save()
+  ctx.translate(0,canvas.height/2);
+  draw_beam(ctx, xdata, ydata);
+  draw_lens(ctx, 400, 30, 60, 0., -500.);
+  draw_lens(ctx, 100, 10, 60, 200, 100);
+  ctx.restore()
+}
+
+function range(start, stop, N)
+{
+  return Array.from({length: N}, (x,i) => i*(stop-start)/(N-1)+start);
+}
+
+function draw_beam(ctx, xdata, ydata) {
+  function draw_outline(ctx, xdata, ydata, diameter) {
+    for (var ii = 0; ii < xdata.length-1; ii++) {
+      ctx.beginPath();
+      ctx.moveTo(xdata[ii],diameter*ydata[ii]);
+      ctx.lineTo(xdata[ii],-diameter*ydata[ii]);
+      ctx.lineTo(xdata[ii+1],-diameter*ydata[ii+1]);
+      ctx.lineTo(xdata[ii+1],diameter*ydata[ii+1]);
+      ctx.closePath();
+      ctx.fill();
+    }
+  }
+  ctx.save();
+  ctx.fillStyle = '#FADBD8';
+  draw_outline(ctx, xdata, ydata, 3);
+  ctx.fillStyle = '#F1948A';
+  draw_outline(ctx, xdata, ydata, 2);
+  ctx.fillStyle = '#CB4335';
+  draw_outline(ctx, xdata, ydata, 1);
+  ctx.restore();
+}
+
+draw(plot_canvas, plot_ctx);
+
+
+</script>
+</body>
+</html>
