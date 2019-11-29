@@ -25,21 +25,20 @@ function beam_radius(z, z0, zR, w0)
   return w0*Math.sqrt(1+w*w);
 }
 
-
 function draw_lens(ctx, x, d, r, roc_left, roc_right)
 {
-  // TODO: total thicknes should take into account RoCs;
+  // TODO: total thickness should take into account RoCs;
   //       this is then not xd, because xd is needed to calculate the arcs,
   //       and they are slightly outside the surface, not on the surface.
   xd = (R) => r*Math.tan(Math.asin(r/R));
-  
+
   ctx.save();
   ctx.translate(x-d/2, 0);
-  
+
   var grd = ctx.createLinearGradient(0,-r,d,r);
   grd.addColorStop(0,'#F8F9F9');
   grd.addColorStop(1,'#A9CCE3');
-  
+
   ctx.beginPath();
   ctx.moveTo(0,-r);
   ctx.lineTo(d,-r);
@@ -59,7 +58,7 @@ function draw(canvas, ctx)
 {
   var xdata = range(0,canvas.width,51);
   var ydata = xdata.map((x) => beam_radius(x, 250, 150, 4));
-  
+
   ctx.save()
   ctx.translate(0,canvas.height/2);
   draw_beam(ctx, xdata, ydata);
