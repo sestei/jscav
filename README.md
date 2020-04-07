@@ -31,6 +31,7 @@ The above results are always calculated, even if the cavity is unstable. This is
 
 For a stable cavity, the following additional parameters will be calculated:
 
+* the _round-trip Gouy phase_, which is the additional phase accumulated by a Gaussian beam, compared to a plane wave,
 * the _mode spacing_ (in frequency space) between successive higher-order mode orders, e.g. how far the TEM<sub>01</sub> is separated from the TEM<sub>00</sub> mode,
 * the _beam waist_, the 1/e<sup>2</sup> radius of the fundamental mode at its smallest point,
 * the _waist position_, relative to mirror M<sub>1</sub>, where positive values are towards M<sub>2</sub>,
@@ -65,4 +66,4 @@ This work is licensed under the Creative Commons Attribution-NonCommercial-Share
 <sup>&dagger;</sup> The height and intensity of the lines just serve to visually distinguish them and should not be mistaken for a representation of the actual mode content.
 
 ----
-2016, S. Steinlechner
+2016-2020, S. Steinlechner
