@@ -25,12 +25,12 @@
     */
     body {
         font-family: 'Roboto Mono', 'sans-serif';
-        font-size: 14px;
+        font-size: 15px;
         background-color: #49483E;
         color: #F8F8F2;
     }
     h1 {
-        font-size: 160%;
+        font-size: 200%;
         color: #FD971F;
     }
     h2 {
@@ -48,6 +48,7 @@
         text-decoration: none;
     }
     a {
+        /*color: #A6E22E;*/
         color: #AE81FF;
         text-decoration: none;
     }
@@ -147,6 +148,7 @@
     <p>The above results are always calculated, even if the cavity is unstable. This is done for convenience: one can quickly play around with e.g. the mirror reflectivities to find a suitable finesse value, without caring about suitable RoCs. Of course, to also see those values in an experiment one would first of all have to make the cavity stable.<br>
     For a stable cavity, the following additional parameters will be calculated:</p>
     <ul>
+        <li>the <s>round-trip Gouy phase</s>, which is the additional phase accumulated by a Gaussian beam, compared to a plane wave</li>,
         <li>the <s>mode spacing</s> (in frequency space) between successive higher-order mode orders, e.g. how far the TEM<sub>01</sub> is separated from the TEM<sub>00</sub> mode,</li>
         <li>the <s>beam waist</s>, the 1/e<sup>2</sup> radius of the fundamental mode at its smallest point,</li>
         <li>the <s>waist position</s>, relative to mirror M<sub>1</sub>, where positive values are towards M<sub>2</sub>,</li>
@@ -230,6 +232,6 @@
 
 </script>
 <div id="results">(Results will appear here)</div>
-<div id="copyright">&copy; 2016 S. Steinlechner, <a href="https://github.com/sestei/jscav">source code</a> available on github</div>
+<div id="copyright">&copy; 2016-2020 S. Steinlechner, <a href="https://github.com/sestei/jscav">source code</a> available on github</div>
 </body>
 </html>

@@ -8,6 +8,8 @@ http://creativecommons.org/licenses/by-nc-sa/4.0/ or send a letter to Creative
 Commons, PO Box 1866, Mountain View, CA 94042, USA.
 */
 
+$ = document.getElementById.bind(document);
+
 var Constants = {
     c: 299792458,
 }
@@ -107,15 +109,16 @@ class Cavity {
         return this.g1*this.g2;
     }
 
-    get mode_spacing() {
+    get roundtrip_gouy_phase() {
         // using formula from LIGO-T1300189
-        var zeta;
         if (this.g1 < 0.0)
-            zeta = 2.0*Math.acos(-Math.sqrt(this.g1g2));
+            return 2.0*Math.acos(-Math.sqrt(this.g1g2));
         else
-            zeta = 2.0*Math.acos(Math.sqrt(this.g1g2));
+            return 2.0*Math.acos(Math.sqrt(this.g1g2));
+    }
 
-        return zeta/(2*Math.PI)*this.FSR;
+    get mode_spacing() {
+        return this.roundtrip_gouy_phase / (2*Math.PI)*this.FSR;
     }
 
     is_confocal() {
@@ -195,7 +198,7 @@ function mode_plot(FSR, spacing)
         ctx.lineTo(w-20,h-45);
         ctx.fill()
 
-        ctx.font = '12px Roboto Mono';
+        ctx.font = '14px Roboto Mono';
         ctx.textAlign = 'center';
         ctx.fillText('Higher-order mode spectrum', w/2, h-20)
         ctx.fillText('f', w-15,h-20);
@@ -237,7 +240,7 @@ function mode_plot(FSR, spacing)
             pos %= 100;
         }
     }
-    var w = 350, h = 220;
+    var w = 400, h = 250;
     var window = get_result_window();
     window.innerHTML += '<canvas id="mode_spacing" width="'+(w*2)+'" height="'+(h*2)+'"></canvas>';
     var canvas = $('mode_spacing');
@@ -254,11 +257,6 @@ function mode_plot(FSR, spacing)
     ctx.scale((w-60)/100,(w-70)/100);
     draw_FSR();
     draw_HOM();    
-}
-
-function $(id)
-{
-    return document.getElementById(id);
 }
 
 function update()
@@ -282,6 +280,11 @@ function update()
                      parseFloat($('cav_RoC2').value));
     var lambda0 = parseFloat($('cav_lambda0').value) * 1e-9;
     
+    var is_stable = cav.is_stable();
+    log_result('Cavity stable', [is_stable ? 'yes' : 'no', '']);
+    if (!is_stable) {
+        log_result('Following values only given for convenience, needs stable cavity', ['','']);
+    }
     log_result('FSR', to_sensible_units(cav.FSR, 'Hz'));
     log_result('Finesse', [cav.F.toFixed(1), '']);
     var FWHM = cav.FSR/cav.F;
@@ -290,11 +293,12 @@ function update()
     log_result('Power build-up factor', [cav.buildup.toFixed(1), '']);
     log_result('Reflected power', [(cav.R * 100).toFixed(3), '%']);
     log_result('Transmitted power', [(cav.T * 100).toFixed(3), '%']);
-    var is_stable = cav.is_stable();
     log_result('g1*g2', [cav.g1g2.toFixed(4), ''])
-    log_result('Cavity stable', [is_stable ? 'yes' : 'no', '']);
     if (is_stable) {
+        log_result('Roundtrip Gouy phase',
+                   to_sensible_units(cav.roundtrip_gouy_phase*180.0/Math.PI, 'deg'))
         log_result('Mode spacing', to_sensible_units(cav.mode_spacing, 'Hz'));
+        log_result('Mode spacing', [Math.abs(cav.mode_spacing*100.0 / cav.FSR).toFixed(2), '% of FSR']);
         log_result('Beam waist', to_sensible_units(cav.w0(lambda0), 'm'));
         log_result('Waist position from M1', to_sensible_units(cav.z0, 'm'));
         log_result('Beam radius at M1', to_sensible_units(cav.w1(lambda0), 'm'));
