@@ -100,7 +100,7 @@
         padding: 0.5em;
         border: 1px solid #333;
         background-color: #282828;
-        display: block;
+        display: none;
     }
     #results .value {
         color: #A6E22E;
@@ -190,6 +190,8 @@
     <span class="input_unit"><input type="number" id="cav_lambda0" value="1064" />nm</span>
     <input type="button" id="cav_btnUpdate" onclick="update()" value="Calculate" />
 </form>
+<div id="results">(Results will appear here)</div>
+<div id="copyright">&copy; 2016-2020 S. Steinlechner, <a href="https://github.com/sestei/jscav">source code</a> available on github</div>
 <script type="text/javascript">
     function swap_R_T(mirror, is_R) {
         var inpR = $('cav_M'+mirror+'_R');
@@ -213,7 +215,8 @@
             obj.style.display = 'block';
     }
 
-    var inputs = ["cav_R1", "cav_R2", "cav_T1", "cav_T2", "cav_L", "cav_RoC1", "cav_RoC2", "cav_lambda0"];
+    var inputs = ["cav_R1", "cav_R2", "cav_T1", "cav_T2", "cav_L",
+                  "cav_RoC1", "cav_RoC2", "cav_lambda0"];
     inputs.forEach(function (elem) {
         $(elem).onkeypress = function(e) {
             if (!e)
@@ -224,14 +227,54 @@
         }
     });
 
+    function parseFromURL(urlQuery)
+    {
+        floatFromParam = function(p) { return parseFloat(urlParams.get(p)); }
+        const urlParams = new URLSearchParams(urlQuery);
+        
+        var needsUpdate = false;
+        inputs.forEach(function (elem) {
+            if (urlParams.has(elem)) {
+                needsUpdate = true;
+                if (elem == 'cav_T1') {
+                    $('cav_RT1_T').checked = true;
+                    swap_R_T('1', true);
+                } else if (elem == 'cav_T2') {
+                    $('cav_RT2_T').checked = true;
+                    swap_R_T('2', true);
+                }
+                $(elem).value = floatFromParam(elem);
+            }
+        });
+        return needsUpdate;
+    }
+
+    function createURL()
+    {
+        var url_base = window.location.href.split('?')[0] + '?';
+        var params = [];
+        inputs.forEach(function (elem) {
+            params.push(`${elem}=${$(elem).value}`) ;
+        });
+        return url_base + params.join('&');
+    }
+
+    function update()
+    {
+        results = $('results')
+        results.innerHTML = `[<a href="${createURL()}">Link to these results</a>]<br/>`;
+        calculateCavity();
+        //results.innerHTML += `<br/><a href="${createURL()}">Link to these results</a>`;
+    }
+
     $('cav_RT1_R').onclick = function(e) { swap_R_T('1', e.checked); }
     $('cav_RT1_T').onclick = function(e) { swap_R_T('1', !e.checked); }
     $('cav_RT2_R').onclick = function(e) { swap_R_T('2', e.checked); }
     $('cav_RT2_T').onclick = function(e) { swap_R_T('2', !e.checked); }
-    $('help').style.display = 'none';
+    
+    if (parseFromURL(window.location.search))
+        update();
 
 </script>
-<div id="results">(Results will appear here)</div>
-<div id="copyright">&copy; 2016-2020 S. Steinlechner, <a href="https://github.com/sestei/jscav">source code</a> available on github</div>
 </body>
 </html>

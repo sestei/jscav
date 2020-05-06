@@ -259,10 +259,8 @@ function mode_plot(FSR, spacing)
     draw_HOM();    
 }
 
-function update()
+function calculateCavity()
 {
-    clear_results();
-    
     var R1, R2;
     if ($('cav_RT1_R').checked)
         R1 = checkR($('cav_R1').value);
@@ -314,12 +312,6 @@ function log_result(desc, value)
     out.innerHTML += '<span class="desc">'+desc+':</span> '
         + '<span class="value">' + value[0] + '</span><span class="unit">'
         + value[1] + '</span><br />';
-}
-
-function clear_results()
-{
-    var out = get_result_window();
-    out.innerHTML = '';
 }
 
 function get_result_window()
