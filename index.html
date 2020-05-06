@@ -254,6 +254,10 @@
         var url_base = window.location.href.split('?')[0] + '?';
         var params = [];
         inputs.forEach(function (elem) {
+            if (elem == 'cav_T1' && $('cav_RT1_R').checked)
+                return;
+            if (elem == 'cav_T2' && $('cav_RT2_R').checked)
+                return;
             params.push(`${elem}=${$(elem).value}`) ;
         });
         return url_base + params.join('&');
