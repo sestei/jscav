@@ -2,7 +2,7 @@
 
 jsCav is a simple calculator for linear optical cavities written in javascript, which allows it to run in any modern web browser (also on mobile devices!).
 
-You can run it [directly from github](http://sestei.github.com/jscav)!
+You can run it [directly from github](http://sestei.github.io/jscav)!
 
 
 ## What does this calculate?
