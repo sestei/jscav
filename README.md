@@ -36,21 +36,21 @@ For a stable cavity, the following additional parameters will be calculated:
 * the _beam waist_, the 1/e<sup>2</sup> radius of the fundamental mode at its smallest point,
 * the _waist position_, relative to mirror M<sub>1</sub>, where positive values are towards M<sub>2</sub>,
 * the _spot sizes_ (1/e<sup>2</sup> radius) of the fundamental mode on the two mirrors,
-* a _mode spectrum_ showing the _resonance locations_ of the first 20 higher-order modes; this can be used to quickly check for mode degeneracy, i.e. when two modes of different mode order coincide<sup>&dagger;</sup>.
+* a _mode spectrum_ showing the _resonance locations_ of higher-order modes up to the given order N=m+n.
 
-Note that the calculation assumes that all modes of Nth order (TEM<sub>mn</sub> where m+n=N) are degenerate. This is usually a good approximation as long as there is rotational symmetry within the cavity, e.g. the mirrors are non-astigmatic.
+Note that the calculation assumes that all modes of Nth order (TEM<sub>mn</sub> where m+n=N) are degenerate. This is usually a good approximation as long as there is rotational symmetry within the cavity, e.g. the mirrors are non-astigmatic. **The height and intensity of the resonances just serves to visually distinguish them and should not be mistaken for a representation of the actual mode content.**
 
 
 ## How does it look like?
 
 Like this:
 
-<img src="jscav.png" width="350" />
+<img src="jscav.png" width="400" />
 
 
 ## What do I need to run it?
 
-Just a recent version of one of the standard web browsers (Chrome, Safari, Firefox, Edge, Opera, etc.), with JavaScript enabled. It should even run fine on your mobile phone! To keep things simple (for me, mostly...), I used some code techniques that were introduced only recently (as of 2016), so if you're stuck with an older web browser for some reason, it's highly likely that this calculator won't work for you, sorry.
+Just a relatively recent version of one of the standard web browsers with JavaScript enabled. Should run fine on your mobile phone, too.
 
 You can run the calculator [directly from github](http://sestei.github.com/jscav). As the calculation runs entirely within the web browser on your computer, an active internet connection should not be necessary after you have loaded the page. Alternatively, you can simply copy all files to a directory of your choice and
 then open the `index.html` in your favourite web browser.
@@ -63,7 +63,4 @@ Whoops :-( Would you please [file a bug report](https://github.com/sestei/jscav/
 This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License. To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/4.0/ or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
 
 ----
-<sup>&dagger;</sup> The height and intensity of the lines just serve to visually distinguish them and should not be mistaken for a representation of the actual mode content.
-
-----
-2016-2020, S. Steinlechner
+2016-2026, S. Steinlechner
