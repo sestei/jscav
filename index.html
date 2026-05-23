@@ -1,24 +1,56 @@
 <!DOCTYPE html>
 <html>
 <meta name="viewport" content="width=device-width" />
-<link href='https://fonts.googleapis.com/css?family=Roboto+Mono' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Roboto+Mono&display=swap' rel='stylesheet' type='text/css'>
 <!--<script type="text/javascript" async
   src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">-->
 </script>
 <style type="text/css">
     /*
-       this uses the monokai colour scheme,
+       this uses an adapted monokai colour scheme,
        http://www.monokai.nl/blog/2006/07/15/textmate-color-theme/
     */
     body {
-        font-family: 'Roboto Mono', 'sans-serif';
+        font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
         font-size: 15px;
-        background-color: #49483E;
+        background-color: #1e1e2e;
         color: #F8F8F2;
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 1em 1.5em;
+        box-sizing: border-box;
     }
     h1 {
         font-size: 200%;
         color: #FD971F;
+        margin: 0.2em 0 0.1em;
+    }
+    .layout {
+        display: grid;
+        grid-template-columns: minmax(220px, 280px) 1fr;
+        gap: 1.5em;
+        align-items: start;
+    }
+    @media (max-width: 640px) {
+        .layout {
+            grid-template-columns: 1fr;
+        }
+    }
+    fieldset.card {
+        border: 1px solid #444;
+        border-radius: 8px;
+        padding: 0.8em 1em;
+        margin: 0 0 1em 0;
+        background-color: #252535;
+        min-inline-size: 0;
+    }
+    fieldset.card legend {
+        color: #FD971F;
+        font-weight: 600;
+        font-size: 85%;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        padding: 0 0.4em;
     }
     h2 {
         font-size: 130%;
@@ -63,6 +95,7 @@
         margin-bottom: 0.5em;
         background-color: #282828;
         color: #E6DB74;
+        border-radius: 6px;
     }
     .input_unit input {
         font-family: 'Roboto Mono', 'sans-serif';
@@ -73,28 +106,80 @@
         padding-right: 0.2em;
         background-color: #282828;
         color: #66D9EF;
+        border-radius: 4px;
     }
     #results {
-        font-family: 'Roboto Mono', 'monospace';
-        margin-top: 1em;
-        padding: 0.5em;
+        font-family: 'Roboto Mono', monospace;
+        margin-top: 0;
+        padding: 0.75em;
         border: 1px solid #333;
-        background-color: #282828;
+        background-color: #252535;
+        border-radius: 8px;
     }
     #help {
-        font-family: 'Roboto Mono', 'monospace';
         margin-top: 0.1em;
         padding: 0.5em;
         border: 1px solid #333;
-        background-color: #282828;
+        background-color: #252535;
         display: none;
+        border-radius: 8px;
     }
-    #results .value {
+    button#cav_btnUpdate {
+        font-family: 'Inter', system-ui, sans-serif;
+        font-size: 100%;
+        font-weight: 600;
+        background-color: #FD971F;
+        color: #1e1e2e;
+        border: none;
+        border-radius: 6px;
+        padding: 0.4em 1.2em;
+        cursor: pointer;
+        margin-top: 0.5em;
+        transition: background-color 0.15s ease;
+    }
+    button#cav_btnUpdate:hover {
+        background-color: #e6861a;
+    }
+    button#cav_btnUpdate:active {
+        background-color: #c97415;
+    }
+    table.results-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: 'Roboto Mono', monospace;
+    }
+    table.results-table td {
+        padding: 0.25em 0.4em;
+        border-bottom: 1px solid #333;
+        vertical-align: baseline;
+    }
+    table.results-table td.desc {
+        font-family: 'Inter', system-ui, sans-serif;
+        color: #F8F8F2;
+        width: 100%;
+    }
+    table.results-table td.value {
         color: #A6E22E;
+        text-align: right;
+        white-space: nowrap;
     }
-    #results .unit {
-        margin-left: 0.1em;
+    table.results-table td.unit {
         color: #E6DB74;
+        padding-left: 0.3em;
+        white-space: nowrap;
+    }
+    table.results-table tr.section-sep td {
+        font-family: 'Inter', system-ui, sans-serif;
+        font-size: 85%;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: #FD971F;
+        padding-top: 0.8em;
+        border-bottom: 1px solid #FD971F44;
+    }
+    table.results-table tr.warn td.value {
+        color: #F92672;
     }
     #copyright {
         margin-top: 1em;
@@ -102,7 +187,34 @@
         font-size: 70%;
     }
     canvas {
-
+        max-width: 100%;
+        display: block;
+    }
+    fieldset.card label:has(input[type="checkbox"]) {
+        display: flex;
+        align-items: center;
+        gap: 0.4em;
+        margin-top: 0.4em;
+        cursor: pointer;
+    }
+    a.share-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35em;
+        font-family: 'Inter', system-ui, sans-serif;
+        font-size: 85%;
+        color: #AE81FF;
+        border: 1px solid #AE81FF44;
+        border-radius: 5px;
+        padding: 0.25em 0.6em;
+        margin-bottom: 0.75em;
+        text-decoration: none;
+        transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+    }
+    a.share-btn:hover {
+        color: #F8F8F2;
+        border-color: #AE81FF80;
+        background-color: #AE81FF22;
     }
 </style>
 <body>
@@ -134,50 +246,70 @@
     <p>The above results are always calculated, even if the cavity is unstable. This is done for convenience: one can quickly play around with e.g. the mirror reflectivities to find a suitable finesse value, without caring about suitable RoCs. Of course, to also see those values in an experiment one would first of all have to make the cavity stable.<br>
     For a stable cavity, the following additional parameters will be calculated:</p>
     <ul>
-        <li>the <s>round-trip Gouy phase</s>, which is the additional phase accumulated by a Gaussian beam, compared to a plane wave</li>,
+        <li>the <s>round-trip Gouy phase</s>, which is the additional phase accumulated by a Gaussian beam, compared to a plane wave,</li>
         <li>the <s>mode spacing</s> (in frequency space) between successive higher-order mode orders, e.g. how far the TEM<sub>01</sub> is separated from the TEM<sub>00</sub> mode,</li>
         <li>the <s>beam waist</s>, the 1/e<sup>2</sup> radius of the fundamental mode at its smallest point,</li>
         <li>the <s>waist position</s>, relative to mirror M<sub>1</sub>, where positive values are towards M<sub>2</sub>,</li>
         <li>the <s>spot sizes</s> (1/e<sup>2</sup> radius) of the fundamental mode on the two mirrors,</li>
-        <li>a <s>mode spectrum</s> showing the <s>resonance locations</s> of the first 20 higher-order modes; this can be used to quickly check for mode degeneracy, i.e. when two modes of different mode order coincide<sup>&dagger;</sup>.</li>
+        <li>a <s>mode spectrum</s> showing the <s>resonance locations</s> of higher-order modes up to the given order N=m+n; this can be used to quickly check for mode degeneracy, i.e. when two modes of different mode order coincide<sup>&dagger;</sup>.</li>
     </ul>
     <p>Note that the calculation assumes that all modes of Nth order (TEM<sub>mn</sub> where m+n=N) are degenerate. This is usually a good approximation as long as there is rotational symmetry within the cavity, e.g. the mirrors are non-astigmatic.</p>
 
     <p style="font-size:90%;font-style:italic"><sup>&dagger;</sup>The height and intensity of the lines just serve to visually distinguish them and should not be mistaken for a representation of the actual mode content.</p>
 
     <h2>What do I need to run it?</h2>
-    <p>Just a recent version of one of the standard web browsers (Chrome, Safari, Firefox, Edge, Opera, etc.). It should even run fine on your mobile phone! To keep things simple (for me, mostly...), I used some code techniques that were introduced only recently (as of 2016), so if you're stuck with an older web browser for some reason, it's highly likely that this calculator won't work for you, sorry.<br>
-    The calculation runs entirely inside your browser, so apart from loading this webpage once, it does not need any internet connection. Oh, and if you disable JavaScript, then this won't work at all.</p>
+    <p>Just a relatively recent version of one of the standard web browsers with JavaScript enabled. Should run fine on your mobile phone, too.</p>
 
     <h2>What if I get wrong results?</h2>
     <p>Whoops :-( Would you please <a href="https://github.com/sestei/jscav/issues">file a bug report</a> detailing the parameters you used and what went wrong?</p>
     </div>
 </div>
-<form>
-    <input type="radio" name="cav_RT1" id="cav_RT1_R" value="R" checked />
-    <label for="cav_RT1_R">M1: Reflectivity</label><br/>
-    <input type="radio" name="cav_RT1" id="cav_RT1_T" value="T" />
-    <label for="cav_RT1_T">M1: Transmissivity</label>
-    <span class="input_unit" id="cav_M1_R"><input type="number" id="cav_R1" value="98.6" />%</span>
-    <span class="input_unit" id="cav_M1_T" style="display:none"><input type="number" id="cav_T1" value="0" />ppm</span>
-    <input type="radio" name="cav_RT2" id="cav_RT2_R" value="R" checked />
-    <label for="cav_RT2_R">M2: Reflectivity</label><br/>
-    <input type="radio" name="cav_RT2" id="cav_RT2_T" value="T" />
-    <label for="cav_RT2_T">M2: Transmissivity</label>
-    <span class="input_unit" id="cav_M2_R"><input type="number" id="cav_R2" value="99.98" />%</span>
-    <span class="input_unit" id="cav_M2_T" style="display:none"><input type="number" id="cav_T2" value="0" />ppm</span>
-    <label for="cav_L">Mirror Separation</label>
-    <span class="input_unit"><input type="number" id="cav_L" value="2" />m</span>
-    <label for="cav_RoC1">M1: RoC (0 = flat)</label>
-    <span class="input_unit"><input type="number" id="cav_RoC1" value="1.5" />m</span>
-    <label for="cav_RoC2">M2: RoC (0 = flat)</label>
-    <span class="input_unit"><input type="number" id="cav_RoC2" value="1.5" />m</span>
-    <label for="cav_lambda0">Wavelength</label>
-    <span class="input_unit"><input type="number" id="cav_lambda0" value="1064" />nm</span>
-    <input type="button" id="cav_btnUpdate" onclick="update()" value="Calculate" />
-</form>
-<div id="results">(Results will appear here)</div>
-<div id="copyright">&copy; 2016-2020 S. Steinlechner, <a href="https://github.com/sestei/jscav">source code</a> available on github</div>
+<div class="layout">
+    <div class="inputs-panel">
+        <form>
+            <fieldset class="card">
+                <legend>Mirror M1</legend>
+                <input type="radio" name="cav_RT1" id="cav_RT1_R" value="R" checked />
+                <label for="cav_RT1_R">Reflectivity</label><br/>
+                <input type="radio" name="cav_RT1" id="cav_RT1_T" value="T" />
+                <label for="cav_RT1_T">Transmissivity</label>
+                <span class="input_unit" id="cav_M1_R"><input type="number" id="cav_R1" value="98.6" />%</span>
+                <span class="input_unit" id="cav_M1_T" style="display:none"><input type="number" id="cav_T1" value="0" />ppm</span>
+                <label for="cav_RoC1">RoC (0 = flat)</label>
+                <span class="input_unit"><input type="number" id="cav_RoC1" value="1.5" />m</span>
+            </fieldset>
+            <fieldset class="card">
+                <legend>Mirror M2</legend>
+                <input type="radio" name="cav_RT2" id="cav_RT2_R" value="R" checked />
+                <label for="cav_RT2_R">Reflectivity</label><br/>
+                <input type="radio" name="cav_RT2" id="cav_RT2_T" value="T" />
+                <label for="cav_RT2_T">Transmissivity</label>
+                <span class="input_unit" id="cav_M2_R"><input type="number" id="cav_R2" value="99.98" />%</span>
+                <span class="input_unit" id="cav_M2_T" style="display:none"><input type="number" id="cav_T2" value="0" />ppm</span>
+                <label for="cav_RoC2">RoC (0 = flat)</label>
+                <span class="input_unit"><input type="number" id="cav_RoC2" value="1.5" />m</span>
+            </fieldset>
+            <fieldset class="card">
+                <legend>Geometry</legend>
+                <label for="cav_L">Mirror Separation</label>
+                <span class="input_unit"><input type="number" id="cav_L" value="2" />m</span>
+            </fieldset>
+            <fieldset class="card">
+                <legend>Light</legend>
+                <label for="cav_lambda0">Wavelength</label>
+                <span class="input_unit"><input type="number" id="cav_lambda0" value="1064" />nm</span>
+                <label for="cav_max_order">Max. mode order</label>
+                <span class="input_unit"><input type="number" id="cav_max_order" value="10" min="0" max="20" /></span>
+                <!-- <label><input type="checkbox" id="cav_airy" /> Show Airy peaks</label> -->
+            </fieldset>
+            <button type="button" id="cav_btnUpdate" onclick="update()">Calculate</button>
+        </form>
+    </div>
+    <div class="results-panel">
+        <div id="results">(Results will appear here)</div>
+    </div>
+</div>
+<div id="copyright">&copy; 2016-2026 S. Steinlechner, <a href="https://github.com/sestei/jscav">source code</a> available on github</div>
 <script type="text/javascript">
     function swap_R_T(mirror, is_R) {
         var inpR = $('cav_M'+mirror+'_R');
@@ -202,7 +334,7 @@
     }
 
     var inputs = ["cav_R1", "cav_R2", "cav_T1", "cav_T2", "cav_L",
-                  "cav_RoC1", "cav_RoC2", "cav_lambda0"];
+                  "cav_RoC1", "cav_RoC2", "cav_lambda0", "cav_max_order"];
     inputs.forEach(function (elem) {
         $(elem).onkeypress = function(e) {
             if (!e)
@@ -217,7 +349,7 @@
     {
         floatFromParam = function(p) { return parseFloat(urlParams.get(p)); }
         const urlParams = new URLSearchParams(urlQuery);
-        
+
         var needsUpdate = false;
         inputs.forEach(function (elem) {
             if (urlParams.has(elem)) {
@@ -249,21 +381,47 @@
         return url_base + params.join('&');
     }
 
+    var shareIcon = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle">'
+        + '<path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>'
+        + '<polyline points="16 6 12 2 8 6"/>'
+        + '<line x1="12" y1="2" x2="12" y2="15"/>'
+        + '</svg>';
+
     function update()
     {
         results = $('results')
-        results.innerHTML = `[<a href="${createURL()}">Link to these results</a>]<br/>`;
+        results.innerHTML = `<a class="share-btn" href="${createURL()}">${shareIcon} Link to these results</a>`;
         calculateCavity();
-        //results.innerHTML += `<br/><a href="${createURL()}">Link to these results</a>`;
     }
 
+    var radios = ['cav_RT1_R', 'cav_RT1_T', 'cav_RT2_R', 'cav_RT2_T'];
+    //$('cav_airy').addEventListener('change', update);
     $('cav_RT1_R').onclick = function(e) { swap_R_T('1', e.checked); }
     $('cav_RT1_T').onclick = function(e) { swap_R_T('1', !e.checked); }
     $('cav_RT2_R').onclick = function(e) { swap_R_T('2', e.checked); }
     $('cav_RT2_T').onclick = function(e) { swap_R_T('2', !e.checked); }
-    
-    if (parseFromURL(window.location.search))
-        update();
+
+    // on devices with a fine pointer (mouse cursor), update the results immediately
+    // when changing any of the inputs, on touch devices, show an "Update" button instead,
+    // debounce to avoid excessive recalculations while the user is still entering the values
+    if (window.matchMedia('(pointer: fine)').matches) {
+        function debounce(fn, ms) {
+            var t; return function() { clearTimeout(t); t = setTimeout(fn, ms); };
+        }
+        var debouncedUpdate = debounce(update, 150);
+        inputs.forEach(function(elem) {
+            $(elem).addEventListener('input', debouncedUpdate);
+        });
+        radios.forEach(function(elem) {
+            $(elem).addEventListener('change', debouncedUpdate);
+        });
+        $('cav_btnUpdate').style.display = 'none';
+    }
+
+    // read in URL parameters
+    parseFromURL(window.location.search);
+    // update the results when the page is loaded, but once fonts have loaded
+    document.fonts.ready.then(update);
 
 </script>
 </body>
