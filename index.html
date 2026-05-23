@@ -335,6 +335,7 @@
 
     var inputs = ["cav_R1", "cav_R2", "cav_T1", "cav_T2", "cav_L",
                   "cav_RoC1", "cav_RoC2", "cav_lambda0", "cav_max_order"];
+    var hasResults = false;
     inputs.forEach(function (elem) {
         $(elem).onkeypress = function(e) {
             if (!e)
@@ -389,6 +390,7 @@
 
     function update()
     {
+        hasResults = true;
         results = $('results')
         results.innerHTML = `<a class="share-btn" href="${createURL()}">${shareIcon} Link to these results</a>`;
         calculateCavity();
@@ -401,13 +403,14 @@
     $('cav_RT2_R').onclick = function(e) { swap_R_T('2', e.checked); }
     $('cav_RT2_T').onclick = function(e) { swap_R_T('2', !e.checked); }
 
+    function debounce(fn, ms) {
+        var t; return function() { clearTimeout(t); t = setTimeout(fn, ms); };
+    }
+
     // on devices with a fine pointer (mouse cursor), update the results immediately
     // when changing any of the inputs, on touch devices, show an "Update" button instead,
     // debounce to avoid excessive recalculations while the user is still entering the values
     if (window.matchMedia('(pointer: fine)').matches) {
-        function debounce(fn, ms) {
-            var t; return function() { clearTimeout(t); t = setTimeout(fn, ms); };
-        }
         var debouncedUpdate = debounce(update, 150);
         inputs.forEach(function(elem) {
             $(elem).addEventListener('input', debouncedUpdate);
@@ -417,6 +420,11 @@
         });
         $('cav_btnUpdate').style.display = 'none';
     }
+
+    // redraw canvas when the window is resized (once results have been calculated)
+    window.addEventListener('resize', debounce(function() {
+        if (hasResults) update();
+    }, 150));
 
     // read in URL parameters
     parseFromURL(window.location.search);
