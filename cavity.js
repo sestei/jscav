@@ -407,26 +407,26 @@ function calculateCavity()
     var FWHM = cav.FSR/cav.F;
 
     var html = '<table class="results-table"><tbody>';
-    html += log_result('Cavity stable', [is_stable ? 'yes' : 'no', ''], is_stable ? '' : 'warn');
-    html += log_result('FSR', to_sensible_units(cav.FSR, 'Hz'));
-    html += log_result('Finesse', [cav.F.toFixed(1), '']);
-    html += log_result('Linewidth (FWHM)', to_sensible_units(FWHM, 'Hz'));
-    html += log_result('Cavity pole', to_sensible_units(FWHM/2.0, 'Hz'));
-    html += log_result('Power build-up factor', [cav.buildup.toFixed(1), '']);
-    html += log_result('Reflected power', [(cav.R * 100).toFixed(3), '%']);
-    html += log_result('Transmitted power', [(cav.T * 100).toFixed(3), '%']);
-    html += log_result('g1 &times; g2', [cav.g1g2.toFixed(4), '']);
+    html += log_result('Cavity stable', [is_stable ? 'yes' : 'no', ''], 'stable', is_stable ? '' : 'warn');
+    html += log_result('FSR', to_sensible_units(cav.FSR, 'Hz'), 'fsr');
+    html += log_result('Finesse', [cav.F.toFixed(1), ''], 'finesse');
+    html += log_result('Linewidth (FWHM)', to_sensible_units(FWHM, 'Hz'), 'fwhm');
+    html += log_result('Cavity pole', to_sensible_units(FWHM/2.0, 'Hz'), 'pole');
+    html += log_result('Power build-up factor', [cav.buildup.toFixed(1), ''], 'buildup');
+    html += log_result('Reflected power', [(cav.R * 100).toFixed(3), '%'], 'R');
+    html += log_result('Transmitted power', [(cav.T * 100).toFixed(3), '%'], 'T');
+    html += log_result('g<sub>1</sub> &times; g<sub>2</sub>', [cav.g1g2.toFixed(4), ''], 'g1g2');
 
     if (is_stable) {
         html += '<tr class="section-sep"><td colspan="3">Stable cavity</td></tr>';
         html += log_result('Roundtrip Gouy phase',
-                           to_sensible_units(cav.roundtrip_gouy_phase*180.0/Math.PI, 'deg'));
-        html += log_result('Mode spacing', to_sensible_units(cav.mode_spacing, 'Hz'));
-        html += log_result('Mode spacing', [Math.abs(cav.mode_spacing*100.0 / cav.FSR).toFixed(2), '% of FSR']);
-        html += log_result('Beam waist', to_sensible_units(cav.w0(lambda0), 'm'));
-        html += log_result('Waist position from M1', to_sensible_units(cav.z0, 'm'));
-        html += log_result('Beam radius at M1', to_sensible_units(cav.w1(lambda0), 'm'));
-        html += log_result('Beam radius at M2', to_sensible_units(cav.w2(lambda0), 'm'));
+                           to_sensible_units(cav.roundtrip_gouy_phase*180.0/Math.PI, 'deg'), 'gouy');
+        html += log_result('Mode spacing', to_sensible_units(cav.mode_spacing, 'Hz'), 'mode_spacing');
+        html += log_result('Mode spacing', [Math.abs(cav.mode_spacing*100.0 / cav.FSR).toFixed(2), '% of FSR'], 'mode_spacing_pct');
+        html += log_result('Beam waist', to_sensible_units(cav.w0(lambda0), 'm'), 'w0');
+        html += log_result('Waist position from M1', to_sensible_units(cav.z0, 'm'), 'z0');
+        html += log_result('Beam radius at M1', to_sensible_units(cav.w1(lambda0), 'm'), 'w');
+        html += log_result('Beam radius at M2', to_sensible_units(cav.w2(lambda0), 'm'), 'w');
     }
     html += '</tbody></table>';
 
@@ -437,11 +437,12 @@ function calculateCavity()
         mode_plot(cav.FSR, cav.mode_spacing, cav.F);
 }
 
-function log_result(desc, value, rowClass)
+function log_result(desc, value, info_key, rowClass)
 {
     var cls = rowClass ? ' class="' + rowClass + '"' : '';
+    let info_btn = info_key ? ' <button type="button" class="info-btn" data-info-key="' + info_key + '">i</button>' : '';
     return '<tr' + cls + '>'
-        + '<td class="desc">' + desc + '</td>'
+        + '<td class="desc">' + desc + info_btn + '</td>'
         + '<td class="value">' + value[0] + '</td>'
         + '<td class="unit">' + value[1] + '</td>'
         + '</tr>';

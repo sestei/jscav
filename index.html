@@ -74,14 +74,46 @@
     a:hover {
         color: #F8F8F2;
     }
-    a.drawer:before {
-        content: url('arrow.svg');
-        display: inline-block;
-        width: 12px;
-        height: 14px;
+    button.info-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        border: 1.5px solid #AE81FF66;
+        background: none;
+        color: #AE81FF;
+        font-family: Georgia, serif;
+        font-size: 10px;
+        font-style: italic;
+        font-weight: bold;
+        cursor: pointer;
+        padding: 0;
+        margin-left: 0.3em;
+        vertical-align: 0.25em;
+        line-height: 1;
+        transition: border-color 0.15s, color 0.15s, background-color 0.15s;
     }
-    div.drawer {
-        margin-bottom: 1em;
+    button.info-btn:hover {
+        border-color: #AE81FF;
+        background-color: #AE81FF22;
+        color: #C4A8FF;
+    }
+    #info-popover {
+        position: fixed;
+        z-index: 1000;
+        max-width: 260px;
+        background-color: #2a2a3e;
+        border: 1px solid #AE81FF55;
+        border-radius: 8px;
+        padding: 0.6em 0.9em;
+        font-family: 'Inter', system-ui, sans-serif;
+        font-size: 13px;
+        line-height: 1.5;
+        color: #F8F8F2;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+        display: none;
     }
     input {
         font-family: 'Roboto Mono', 'sans-serif';
@@ -114,14 +146,6 @@
         padding: 0.75em;
         border: 1px solid #333;
         background-color: #252535;
-        border-radius: 8px;
-    }
-    #help {
-        margin-top: 0.1em;
-        padding: 0.5em;
-        border: 1px solid #333;
-        background-color: #252535;
-        display: none;
         border-radius: 8px;
     }
     button#cav_btnUpdate {
@@ -221,49 +245,6 @@
 <script type="text/javascript" src="complex.js"></script>
 <script type="text/javascript" src="cavity.js"></script>
 <h1>Linear Cavity Calculator</h1>
-<div class="drawer">
-    <a class="drawer" href="#" onclick="toggle_visibility('help'); return false;">How do I use this?</a>
-    <div id="help">
-    <h2>What does this calculate?</h2>
-    <p>This is a simple calculator for linear optical resonators (cavities), i.e. for an optical system that looks like this:</p>
-    <p><img src="lincav.svg" width="280" height="100"></p>
-    <p>If this doesn't look familiar to you, you probably won't need this calculator.<br>
-    You will need to provide some basic optical and geometric properties of the cavity:</p>
-    <ul>
-        <li><em>Power reflectivity</em> (or transmission) of the two mirrors,</li>
-        <li><em>Radii of curvature</em> (RoC) of the mirrors,</li>
-        <li>The <em>separation</em> between the two mirrors (assumed to be air, with index of refraction = 1),</li>
-        <li>The operating <em>wavelength</em>.</li>
-    </ul>
-    <p>From these inputs, the calculator will do some heavy thinking and then come up with these results:</p>
-    <ul>
-        <li>the <s>FSR</s> (free spectral range), i.e. the frequency separation between two successive cavity resonances,</li>
-        <li>the <s>finesse</s> and the spectral <s>linewidth</s> of each resonance, given as FWHM (full width at half maximum) and cavity pole (half width at half maximum),</li>
-        <li>the <s>power-buildup</s> inside the cavity,</li>
-        <li>the <s>transmitted</s> and <s>reflected</s> power on resonance, in percent of the incident power,</li>
-        <li>the cavity <s>g-factor product</s>, this product must be between 0 and 1 for a stable cavity, i.e. a cavity that supports a TEM<sub>00</sub> fundamental mode.</li>
-    </ul>
-    <p>The above results are always calculated, even if the cavity is unstable. This is done for convenience: one can quickly play around with e.g. the mirror reflectivities to find a suitable finesse value, without caring about suitable RoCs. Of course, to also see those values in an experiment one would first of all have to make the cavity stable.<br>
-    For a stable cavity, the following additional parameters will be calculated:</p>
-    <ul>
-        <li>the <s>round-trip Gouy phase</s>, which is the additional phase accumulated by a Gaussian beam, compared to a plane wave,</li>
-        <li>the <s>mode spacing</s> (in frequency space) between successive higher-order mode orders, e.g. how far the TEM<sub>01</sub> is separated from the TEM<sub>00</sub> mode,</li>
-        <li>the <s>beam waist</s>, the 1/e<sup>2</sup> radius of the fundamental mode at its smallest point,</li>
-        <li>the <s>waist position</s>, relative to mirror M<sub>1</sub>, where positive values are towards M<sub>2</sub>,</li>
-        <li>the <s>spot sizes</s> (1/e<sup>2</sup> radius) of the fundamental mode on the two mirrors,</li>
-        <li>a <s>mode spectrum</s> showing the <s>resonance locations</s> of higher-order modes up to the given order N=m+n; this can be used to quickly check for mode degeneracy, i.e. when two modes of different mode order coincide<sup>&dagger;</sup>.</li>
-    </ul>
-    <p>Note that the calculation assumes that all modes of Nth order (TEM<sub>mn</sub> where m+n=N) are degenerate. This is usually a good approximation as long as there is rotational symmetry within the cavity, e.g. the mirrors are non-astigmatic.</p>
-
-    <p style="font-size:90%;font-style:italic"><sup>&dagger;</sup>The height and intensity of the lines just serve to visually distinguish them and should not be mistaken for a representation of the actual mode content.</p>
-
-    <h2>What do I need to run it?</h2>
-    <p>Just a relatively recent version of one of the standard web browsers with JavaScript enabled. Should run fine on your mobile phone, too.</p>
-
-    <h2>What if I get wrong results?</h2>
-    <p>Whoops :-( Would you please <a href="https://github.com/sestei/jscav/issues">file a bug report</a> detailing the parameters you used and what went wrong?</p>
-    </div>
-</div>
 <div class="layout">
     <div class="inputs-panel">
         <form>
@@ -273,9 +254,11 @@
                 <label for="cav_RT1_R">Reflectivity</label><br/>
                 <input type="radio" name="cav_RT1" id="cav_RT1_T" value="T" />
                 <label for="cav_RT1_T">Transmissivity</label>
+                <button type="button" class="info-btn" data-info-key="rt">i</button>
                 <span class="input_unit" id="cav_M1_R"><input type="number" id="cav_R1" value="98.6" />%</span>
                 <span class="input_unit" id="cav_M1_T" style="display:none"><input type="number" id="cav_T1" value="0" />ppm</span>
-                <label for="cav_RoC1">RoC (0 = flat)</label>
+                <label for="cav_RoC1">Radius of curvature</label>
+                <button type="button" class="info-btn" data-info-key="roc">i</button>
                 <span class="input_unit"><input type="number" id="cav_RoC1" value="1.5" />m</span>
             </fieldset>
             <fieldset class="card">
@@ -284,23 +267,27 @@
                 <label for="cav_RT2_R">Reflectivity</label><br/>
                 <input type="radio" name="cav_RT2" id="cav_RT2_T" value="T" />
                 <label for="cav_RT2_T">Transmissivity</label>
+                <button type="button" class="info-btn" data-info-key="rt">i</button>
                 <span class="input_unit" id="cav_M2_R"><input type="number" id="cav_R2" value="99.98" />%</span>
                 <span class="input_unit" id="cav_M2_T" style="display:none"><input type="number" id="cav_T2" value="0" />ppm</span>
-                <label for="cav_RoC2">RoC (0 = flat)</label>
+                <label for="cav_RoC2">Radius of curvature</label>
+                <button type="button" class="info-btn" data-info-key="roc">i</button>
                 <span class="input_unit"><input type="number" id="cav_RoC2" value="1.5" />m</span>
             </fieldset>
             <fieldset class="card">
                 <legend>Geometry</legend>
                 <label for="cav_L">Mirror Separation</label>
+                <button type="button" class="info-btn" data-info-key="L">i</button>
                 <span class="input_unit"><input type="number" id="cav_L" value="2" />m</span>
             </fieldset>
             <fieldset class="card">
                 <legend>Light</legend>
                 <label for="cav_lambda0">Wavelength</label>
+                <button type="button" class="info-btn" data-info-key="lambda">i</button>
                 <span class="input_unit"><input type="number" id="cav_lambda0" value="1064" />nm</span>
                 <label for="cav_max_order">Max. mode order</label>
+                <button type="button" class="info-btn" data-info-key="order">i</button>
                 <span class="input_unit"><input type="number" id="cav_max_order" value="10" min="0" max="20" /></span>
-                <!-- <label><input type="checkbox" id="cav_airy" /> Show Airy peaks</label> -->
             </fieldset>
             <button type="button" id="cav_btnUpdate" onclick="update()">Calculate</button>
         </form>
@@ -426,11 +413,79 @@
         if (hasResults) update();
     }, 150));
 
+    // --- info popovers ---
+    var INFO_TEXT = {
+        rt:     'Power reflectivity (or transmissivity) of the mirror.<br>' +
+                'Reflectivity is entered as a percentage (0&minus;100%). ' +
+                'Switch to transmissivity to enter in parts per million (ppm). ' +
+                'For a lossless mirror R + T / 10&sup4; = 100%; any difference is treated as loss.',
+        roc:    'Radius of curvature of the mirror surface in metres. ' +
+                'Enter 0 for a flat mirror. ' +
+                'A concave mirror (curving towards the cavity interior) has a positive RoC.',
+        L:      'Distance between the two mirror surfaces in metres. ' +
+                'The medium between the mirrors is assumed to be air (refractive index n = 1).',
+        lambda: 'Operating laser wavelength in nanometres — ' +
+                'e.g. 1064 nm for Nd:YAG, 532 nm for frequency-doubled, or 1550 nm for telecom.',
+        order:  'Highest transverse mode order N = m + n to display in the mode spectrum.',
+        stable: 'Cavity is optically stable when 0 &lt; g<sub>1</sub>&times;g<sub>2</sub> &lt; 1. ' +
+                'Only stable cavities support a circulating Gaussian beam mode, so modes and stability parameters are only calculated for stable configurations.',
+        fsr:    'Free Spectral Range: the frequency spacing between successive (longitudinal) cavity resonances.',
+        finesse: 'Finesse = FSR / linewidth. Higher finesse indicates longer storage time and narrower resonance peaks.',
+        fwhm:   'Full Width at Half Maximum of a cavity resonance. The spectral linewidth.',
+        pole:   'Cavity pole (half width at half maximum). Equal to FWHM / 2.',
+        buildup: 'Power build-up factor inside the cavity relative to incident power at resonance.',
+        R:      'Fraction of incident power reflected by the cavity at resonance, neglecting losses.',
+        T:      'Fraction of incident power transmitted by the cavity at resonance, neglecting losses.',
+        g1g2:   'Product of cavity g-factors:<br>g<sub>1</sub> = 1 &minus; L/RoC<sub>1</sub>, g<sub>2</sub> = 1 &minus; L/RoC<sub>2</sub>.',
+        gouy:   'Additional phase accumulated by a Gaussian beam over one round trip, relative to a plane wave.',
+        mode_spacing: 'Frequency difference between subsequent transverse modes.',
+        mode_spacing_pct: 'Mode spacing expressed as a percentage of the Free Spectral Range.',
+        w0:     'Beam waist radius (1/e<sup>2</sup> intensity) at the fundamental mode focus point.',
+        z0:     'Position of the beam waist along the cavity axis, measured from mirror M1. '+
+                'If the position is negative, the waist is located in front of the cavity, i.e. before M1.',
+        w:      'Beam radius (1/e<sup>2</sup> intensity) of the fundamental mode at the mirror.',
+    };
+
+    function showInfo(btn, text) {
+        var pop = $('info-popover');
+        // toggle off when clicking the same button again
+        if (pop._source === btn && pop.style.display === 'block') {
+            pop.style.display = 'none';
+            pop._source = null;
+            return;
+        }
+        pop.innerHTML = text;
+        pop._source = btn;
+        // position: try right of button first, flip left if it would overflow
+        var rect = btn.getBoundingClientRect();
+        var left = rect.right + 10;
+        if (left + 268 > window.innerWidth - 8) left = Math.max(8, rect.left - 268 - 10);
+        var top = Math.max(8, rect.top);
+        pop.style.left = left + 'px';
+        pop.style.top  = top  + 'px';
+        pop.style.display = 'block';
+    }
+
+    document.addEventListener('click', function(e) {
+        var btn = e.target.closest('button.info-btn');
+        if (btn) {
+            e.stopPropagation();
+            showInfo(btn, INFO_TEXT[btn.dataset.infoKey] || '');
+            return;
+        }
+        // close popover if clicked outside (and not on a button)
+        var pop = $('info-popover');
+        if (pop.style.display === 'block' && !pop.contains(e.target)) {
+            pop.style.display = 'none';
+        }
+    });
+
     // read in URL parameters
     parseFromURL(window.location.search);
     // update the results when the page is loaded, but once fonts have loaded
     document.fonts.ready.then(update);
 
 </script>
+<div id="info-popover"></div>
 </body>
 </html>
